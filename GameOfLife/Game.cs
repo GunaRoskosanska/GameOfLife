@@ -105,7 +105,7 @@ namespace GameOfLife
         }
 
         // The Print method builds a single string then writes to the console by repositioning the cursor
-        private void Print(Status[,] future, int timeout = 500)
+        private void Print(Status[,] future, int timeout = 1000)
         {
             var stringBuilder = new StringBuilder();
             for (var row = 0; row < Rows; row++)
