@@ -105,22 +105,34 @@ namespace GameOfLife
         }
 
         // The Print method builds a single string then writes to the console by repositioning the cursor
-        private void Print(Status[,] future, int timeout = 1000)
+        private void Print(Status[,] future, int timeout = 2000)
         {
             var stringBuilder = new StringBuilder();
+
+            int aliveCellsCount = 0;
+
             for (var row = 0; row < Rows; row++)
             {
                 for (var column = 0; column < Columns; column++)
                 {
+                    
                     var cell = future[row, column];
                     stringBuilder.Append(cell == Status.Alive ? "@" : " ");
+
+                    if (cell == Status.Alive)
+                    {
+                        aliveCellsCount++;
+                    }
                 }
                 stringBuilder.Append("\n");
             }
+
             Console.BackgroundColor = ConsoleColor.DarkCyan;
+            Console.Clear();
             Console.CursorVisible = false;
             Console.SetCursorPosition(0, 0);
             Console.Write(stringBuilder.ToString());
+            Console.WriteLine($"Count of live cells: {aliveCellsCount}");
             Thread.Sleep(timeout);
         }
     }
