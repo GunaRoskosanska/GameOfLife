@@ -4,13 +4,10 @@ using System.Text;
 
 namespace GameOfLife
 {
-    class Cell
+    public enum CellStatus
     {
-        public enum Status
-        {
-            Dead,
-            Alive,
-        }
-
+        Dead,
+        Alive,
     }
+
 }

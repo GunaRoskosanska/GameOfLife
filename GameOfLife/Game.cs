@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using static GameOfLife.Cell;
 
 namespace GameOfLife
 {
@@ -12,28 +11,35 @@ namespace GameOfLife
         int Rows;
         int Columns;
         bool IsRuning;
-        Status[,] grid;
 
         public void StartNewGame()
         {
             Console.Write("Enter number of rows: ");
-            Rows = int.Parse(Console.ReadLine());
+
+            while (!int.TryParse(Console.ReadLine(), out Rows))
+            {
+                Console.Write("Please Enter Numbers Only. ");
+            }
 
             Console.Write("Enter number of columns: ");
-            Columns = int.Parse(Console.ReadLine());
 
-            var grid = new Status[Rows, Columns];
+            while (!int.TryParse(Console.ReadLine(), out Columns))
+            {
+                Console.Write("Please Enter Numbers Only. ");
+            }
 
-            // randomly initialize grid
+            var grid = new CellStatus[Rows, Columns];
+
+            // Randomly initialize grid
             for (var row = 0; row < Rows; row++)
             {
                 for (var column = 0; column < Columns; column++)
                 {
-                    grid[row, column] = (Status)RandomNumberGenerator.GetInt32(0, 2);
+                    grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
                 }
             }
 
-            // to stop the game
+            // To stop the game
             Console.CancelKeyPress += (sender, args) =>
             {
                 IsRuning = false;
@@ -52,60 +58,61 @@ namespace GameOfLife
             }
         }
 
-        private Status[,] NextGeneration(Status[,] currentGrid)
+        private CellStatus[,] NextGeneration(CellStatus[,] currentGrid)
         {
-            var nextGeneration = new Status[Rows, Columns];
+            var nextGeneration = new CellStatus[Rows, Columns];
 
-            // loop through every cell
+            // Loop through every cell
             for (var row = 1; row < Rows - 1; row++)
             for (var column = 1; column < Columns - 1; column++)
             {
-                //find alive neighbors
+                // Find alive neighbors
                 var aliveNeighbors = 0;
                 for (var i = -1; i <= 1; i++)
                 {
                     for (var j = -1; j <= 1; j++)
                     {
-                        aliveNeighbors += currentGrid[row + i, column + j] == Status.Alive ? 1 : 0;
+                        aliveNeighbors += currentGrid[row + i, column + j] == CellStatus.Alive ? 1 : 0;
                     }
                 }
                 var currentCell = currentGrid[row, column];
 
                 // The cell need to be removed from its neighbors
                 // as it was counted before
-                aliveNeighbors -= currentCell == Status.Alive ? 1 : 0;
+                aliveNeighbors -= currentCell == CellStatus.Alive ? 1 : 0;
 
                 // Implementing the rules of life
 
                 // Cell is lonely and dies
-                if (currentCell == Status.Alive && aliveNeighbors < 2)
+                if (currentCell == CellStatus.Alive && aliveNeighbors < 2)
                 {
-                    nextGeneration[row, column] = Status.Dead;
+                    nextGeneration[row, column] = CellStatus.Dead;
                 }
 
                 // Cell dies due to over population
-                else if (currentCell == Status.Alive && aliveNeighbors > 3)
+                else if (currentCell == CellStatus.Alive && aliveNeighbors > 3)
                 {
-                    nextGeneration[row, column] = Status.Dead;
+                    nextGeneration[row, column] = CellStatus.Dead;
                 }
 
                 // A new cell is born
-                else if (currentCell == Status.Dead && aliveNeighbors == 3)
+                else if (currentCell == CellStatus.Dead && aliveNeighbors == 3)
                 {
-                    nextGeneration[row, column] = Status.Alive;
+                    nextGeneration[row, column] = CellStatus.Alive;
                 }
 
-                // stays the same
+                // Stays the same
                 else
                 {
                     nextGeneration[row, column] = currentCell;
                 }
             }
+
             return nextGeneration;
         }
 
         // The Print method builds a single string then writes to the console by repositioning the cursor
-        private void Print(Status[,] future, int timeout = 1000)
+        private void Print(CellStatus[,] future, int timeout = 1000)
         {
             var stringBuilder = new StringBuilder();
 
@@ -117,9 +124,9 @@ namespace GameOfLife
                 {
                     
                     var cell = future[row, column];
-                    stringBuilder.Append(cell == Status.Alive ? "@" : " ");
+                    stringBuilder.Append(cell == CellStatus.Alive ? "@" : " ");
 
-                    if (cell == Status.Alive)
+                    if (cell == CellStatus.Alive)
                     {
                         aliveCellsCount++;
                     }
