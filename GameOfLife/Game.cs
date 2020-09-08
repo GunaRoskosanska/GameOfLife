@@ -8,6 +8,7 @@ namespace GameOfLife
 {
     class Game
     {
+        const int MinValue = 1;
         int Rows;
         int Columns;
         bool IsRuning;
@@ -15,17 +16,21 @@ namespace GameOfLife
         public void StartNewGame()
         {
             Console.Write("Enter number of rows: ");
+            int.TryParse(Console.ReadLine(), out Rows);
 
-            while (!int.TryParse(Console.ReadLine(), out Rows))
+            while (Rows < MinValue)
             {
-                Console.Write("Please Enter Numbers Only. ");
+                Console.Write("Please enter positive numbers only. ");
+                int.TryParse(Console.ReadLine(), out Rows);
             }
 
             Console.Write("Enter number of columns: ");
+            int.TryParse(Console.ReadLine(), out Columns);
 
-            while (!int.TryParse(Console.ReadLine(), out Columns))
+            while (Columns < MinValue)
             {
-                Console.Write("Please Enter Numbers Only. ");
+                Console.Write("Please enter positive numbers only. ");
+                int.TryParse(Console.ReadLine(), out Columns);
             }
 
             var grid = new CellStatus[Rows, Columns];
