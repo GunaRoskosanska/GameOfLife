@@ -64,6 +64,7 @@ namespace GameOfLife
             while (IsRuning)
             {
                 gameViewer.Print(grid);
+                Thread.Sleep(1000);
                 grid = cellStatusGeneration.NextGeneration(grid);
             }
         }

@@ -7,8 +7,6 @@ namespace GameOfLife
 {
     class GameViewer
     {
-
-
         // The Print method builds a single string then writes to the console by repositioning the cursor
         public void Print(CellStatus[,] cellStatuses, int timeout = 1000)
         {
@@ -41,7 +39,6 @@ namespace GameOfLife
             Console.SetCursorPosition(0, 0);
             Console.Write(stringBuilder.ToString());
             Console.WriteLine($"Count of live cells: {aliveCellsCount}");
-            Thread.Sleep(timeout);
         }
     }
 }

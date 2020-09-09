@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameOfLife
+﻿namespace GameOfLife
 {
     class CellStatusGenerationManager
     {
@@ -15,7 +11,7 @@ namespace GameOfLife
             this.columns = columns;
         }
 
-        public int AliveCells { get; private set; }
+        public int AliveCells { get; private set; } 
 
         public int GenerationNumber { get; private set; }
 
@@ -68,7 +64,6 @@ namespace GameOfLife
                     nextGeneration[row, column] = currentCell;
                 }
             }
-
             return nextGeneration;
         }
     }
