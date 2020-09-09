@@ -1,72 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
+using System.Timers;
 
 namespace GameOfLife
 {
-    class Game
+    public class Game
     {
         GameViewer gameViewer;
         CellStatusGenerationManager cellStatusGeneration;
         const int MinValue = 1;
+        const int MaxValue = 50;
         int Rows;
         int Columns;
-        bool IsRuning;
+        private Timer timer;
+        const string incorrectEnteredNumberAnnouncement = "Please enter positive numbers only from 1 to 50. ";
 
         public void StartNewGame()
         {
-            Console.Write("Enter number of rows: ");
+            Console.Write("Enter number of rows (from 1 to 50): ");
             int.TryParse(Console.ReadLine(), out Rows);
 
-            while (Rows < MinValue)
+            while (Rows < MinValue || Rows > MaxValue)
             {
-                Console.Write("Please enter positive numbers only. ");
+                Console.Write(incorrectEnteredNumberAnnouncement);
                 int.TryParse(Console.ReadLine(), out Rows);
             }
 
-            Console.Write("Enter number of columns: ");
+            Console.Write("Enter number of columns (from 1 to 50): ");
             int.TryParse(Console.ReadLine(), out Columns);
-
-            while (Columns < MinValue)
+            
+            while (Columns < MinValue || Columns > MaxValue)
             {
-                Console.Write("Please enter positive numbers only. ");
+                Console.Write(incorrectEnteredNumberAnnouncement);
                 int.TryParse(Console.ReadLine(), out Columns);
             }
 
             cellStatusGeneration = new CellStatusGenerationManager(Rows, Columns);
             gameViewer = new GameViewer();
 
-            var grid = new CellStatus[Rows, Columns];
-
-            // Randomly initialize grid
-            for (var row = 0; row < Rows; row++)
-            {
-                for (var column = 0; column < Columns; column++)
-                {
-                    grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
-                }
-            }
-
             // To stop the game
             Console.CancelKeyPress += (sender, args) =>
             {
-                IsRuning = false;
+                timer.Enabled = false;
                 Console.WriteLine("\n Ending game.");
             };
 
             Console.Clear();
 
-            // Displaying the grid
-            IsRuning = true;
+            timer = new Timer(1000);
+            timer.Elapsed += Loop;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+        }
 
-            while (IsRuning)
+        private void Loop(object sender, ElapsedEventArgs e)
+        {
+            var gameInfo = new GameInfo
             {
-                gameViewer.Print(grid);
-                Thread.Sleep(1000);
-                grid = cellStatusGeneration.NextGeneration(grid);
-            }
+                LifesGenerationGrid = cellStatusGeneration.NextGeneration(),
+                GenerationNumber = cellStatusGeneration.GenerationNumber,
+                AliveCells = cellStatusGeneration.AliveCells
+            };
+
+            gameViewer.Print(gameInfo);
         }
     }
 }

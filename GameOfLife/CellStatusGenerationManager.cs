@@ -1,9 +1,12 @@
-﻿namespace GameOfLife
+﻿using System.Security.Cryptography;
+
+namespace GameOfLife
 {
     class CellStatusGenerationManager
     {
         private int rows;
         private int columns;
+        private CellStatus[,] currentLifeGenerationGrid;
 
         public CellStatusGenerationManager(int rows, int columns)
         {
@@ -12,10 +15,47 @@
         }
 
         public int AliveCells { get; private set; } 
-
         public int GenerationNumber { get; private set; }
 
-        public CellStatus[,] NextGeneration(CellStatus[,] currentGrid)
+        /// <summary>
+        /// Calculates next lifes generation
+        /// </summary>
+        /// <returns></returns>
+        public CellStatus[,] NextGeneration()
+        {
+            if (GenerationNumber == 0)
+            {
+                currentLifeGenerationGrid = FirstGeneration();
+                GenerationNumber++;
+            }
+            else
+            {
+                currentLifeGenerationGrid = NextGeneration(currentLifeGenerationGrid);
+                GenerationNumber++;
+            }
+
+            return currentLifeGenerationGrid;
+        }
+
+        // Generate first lifes generation
+        private CellStatus[,] FirstGeneration()
+        {
+            var grid = new CellStatus[rows, columns];
+
+            // Randomly initialize grid
+            for (var row = 0; row < rows; row++)
+            {
+                for (var column = 0; column < columns; column++)
+                {
+                    grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
+                }
+            }
+
+            return grid;
+        }
+        
+        // Calculates next lifes generation based on current generation
+        private CellStatus[,] NextGeneration(CellStatus[,] lifeGenerationGrid)
         {
             var nextGeneration = new CellStatus[rows, columns];
 
@@ -29,10 +69,10 @@
                 {
                     for (var j = -1; j <= 1; j++)
                     {
-                        aliveNeighbors += currentGrid[row + i, column + j] == CellStatus.Alive ? 1 : 0;
+                        aliveNeighbors += lifeGenerationGrid[row + i, column + j] == CellStatus.Alive ? 1 : 0;
                     }
                 }
-                var currentCell = currentGrid[row, column];
+                var currentCell = lifeGenerationGrid[row, column];
 
                 // The cell need to be removed from its neighbors
                 // as it was counted before
