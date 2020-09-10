@@ -6,13 +6,12 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
+            StartGameAndLoop game = new StartGameAndLoop();
             game.StartNewGame();
 
             Console.ReadKey();
 
             // Add possibility to save information to file and restore it on application start
-            // Add Possibility to stop application in any moment
         }
     }
 }

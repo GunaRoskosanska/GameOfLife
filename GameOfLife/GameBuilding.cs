@@ -3,10 +3,10 @@ using System.Text;
 
 namespace GameOfLife
 {
-    class GameViewer
+    class GameBuilding
     {
         // The Print method builds a single string then writes to the console by repositioning the cursor
-        public void Print(GameInfo gameInfo)
+        public void DrawGeneration(GameInfoShownInConsole gameInfo)
         {
             var cellStatuses = gameInfo.LifesGenerationGrid;
             var aliveCells = gameInfo.AliveCells;
@@ -31,8 +31,9 @@ namespace GameOfLife
             Console.CursorVisible = false;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Generation #{generationNumber} | Count of live cells: {aliveCells}");
+            Console.WriteLine($"You can stop the application by pressing Ctrl+C.");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(0, 1);
+            Console.SetCursorPosition(0, 2);
             Console.Write(stringBuilder.ToString());
         }
     }

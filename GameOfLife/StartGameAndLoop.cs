@@ -3,9 +3,9 @@ using System.Timers;
 
 namespace GameOfLife
 {
-    public class Game
+    public class StartGameAndLoop
     {
-        GameViewer gameViewer;
+        GameBuilding gameViewer;
         CellStatusGenerationManager cellStatusGeneration;
         const int MinValue = 1;
         const int MaxValue = 50;
@@ -35,7 +35,7 @@ namespace GameOfLife
             }
 
             cellStatusGeneration = new CellStatusGenerationManager(Rows, Columns);
-            gameViewer = new GameViewer();
+            gameViewer = new GameBuilding();
 
             // To stop the game
             Console.CancelKeyPress += (sender, args) =>
@@ -54,14 +54,14 @@ namespace GameOfLife
 
         private void Loop(object sender, ElapsedEventArgs e)
         {
-            var gameInfo = new GameInfo
+            var gameInfo = new GameInfoShownInConsole
             {
                 LifesGenerationGrid = cellStatusGeneration.NextGeneration(),
                 GenerationNumber = cellStatusGeneration.GenerationNumber,
                 AliveCells = cellStatusGeneration.AliveCells
             };
 
-            gameViewer.Print(gameInfo);
+            gameViewer.DrawGeneration(gameInfo);
         }
     }
 }
