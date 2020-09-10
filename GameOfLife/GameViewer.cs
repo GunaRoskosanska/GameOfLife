@@ -29,14 +29,11 @@ namespace GameOfLife
 
             Console.Clear();
             Console.CursorVisible = false;
-
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Generation #{generationNumber} | Count of live cells: {aliveCells}");
-
             Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(0, 1);
             Console.Write(stringBuilder.ToString());
-            
         }
     }
 }

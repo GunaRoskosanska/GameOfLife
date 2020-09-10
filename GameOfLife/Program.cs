@@ -11,7 +11,6 @@ namespace GameOfLife
 
             Console.ReadKey();
 
-            // Add count of iteration
             // Add possibility to save information to file and restore it on application start
             // Add Possibility to stop application in any moment
         }
