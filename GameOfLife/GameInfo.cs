@@ -1,6 +1,6 @@
 ﻿namespace GameOfLife
 {
-    public class GameInfoShownInConsole
+    public class GameInfo
     {
         public CellStatus [,] LifesGenerationGrid { get; set; }
         public int GenerationNumber { get; set; }

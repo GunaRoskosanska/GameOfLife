@@ -3,10 +3,13 @@ using System.Text;
 
 namespace GameOfLife
 {
-    class GameBuilding
+    public class GamePresenter
     {
-        // The Print method builds a single string then writes to the console by repositioning the cursor
-        public void DrawGeneration(GameInfoShownInConsole gameInfo)
+        /// <summary>
+        /// Builds a single string then writes to the console by repositioning the cursor
+        /// </summary>
+        /// <param name="gameInfo"></param>
+        public void Print(GameInfo gameInfo)
         {
             var cellStatuses = gameInfo.LifesGenerationGrid;
             var aliveCells = gameInfo.AliveCells;
@@ -24,7 +27,7 @@ namespace GameOfLife
                     var cell = cellStatuses[row, column];
                     stringBuilder.Append(cell == CellStatus.Alive ? "@" : " ");
                 }
-                stringBuilder.Append("\n");
+                stringBuilder.AppendLine();
             }
 
             Console.Clear();

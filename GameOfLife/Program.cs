@@ -2,16 +2,16 @@
 
 namespace GameOfLife
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            StartGameAndLoop game = new StartGameAndLoop();
+            GameOfLife game = new GameOfLife();
             game.StartNewGame();
 
             Console.ReadKey();
 
-            // Add possibility to save information to file and restore it on application start
+            // TODO: Add possibility to save information to file and restore it on application start
         }
     }
 }
