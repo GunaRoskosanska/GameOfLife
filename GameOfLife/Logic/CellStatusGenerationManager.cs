@@ -1,20 +1,28 @@
-﻿using System.Linq;
+﻿using GameOfLife.Model;
+using System.Linq;
 using System.Security.Cryptography;
 
-namespace GameOfLife
+namespace GameOfLife.Logic
 {
     public class CellStatusGenerationManager
     {
-        private int rows;
-        private int columns;
         private CellStatus[,] currentLifeGenerationGrid;
+        private GridSize gridSize;
+
         public int AliveCells { get; private set; }
         public int GenerationNumber { get; private set; }
 
-        public CellStatusGenerationManager(int rows, int columns)
+        public CellStatusGenerationManager(GridSize gridSize)
         {
-            this.rows = rows;
-            this.columns = columns;
+            this.gridSize = gridSize;
+        }
+
+        public CellStatusGenerationManager(GameInfo gameInfo)
+        {
+            this.GenerationNumber = gameInfo.GenerationNumber;
+            this.AliveCells = gameInfo.AliveCells;
+            this.currentLifeGenerationGrid = gameInfo.LifesGenerationGrid;
+            this.gridSize = gameInfo.GridSize;
         }
 
         /// <summary>
@@ -51,12 +59,12 @@ namespace GameOfLife
         /// </summary>
         private CellStatus[,] FirstGeneration()
         {
-            var grid = new CellStatus[rows, columns];
+            var grid = new CellStatus[gridSize.Rows, gridSize.Columns];
 
             // Randomly initialize grid
-            for (var row = 0; row < rows; row++)
+            for (var row = 0; row < gridSize.Rows; row++)
             {
-                for (var column = 0; column < columns; column++)
+                for (var column = 0; column < gridSize.Columns; column++)
                 {
                     grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
                 }
@@ -70,12 +78,12 @@ namespace GameOfLife
         /// <param name="lifeGenerationGrid"></param>
         private CellStatus[,] NextGeneration(CellStatus[,] lifeGenerationGrid)
         {
-            var nextGeneration = new CellStatus[rows, columns];
+            var nextGeneration = new CellStatus[gridSize.Rows, gridSize.Columns];
 
             // Loop through every cell
-            for (var row = 1; row < rows - 1; row++)
+            for (var row = 1; row < gridSize.Rows - 1; row++)
             {
-                for (var column = 1; column < columns - 1; column++)
+                for (var column = 1; column < gridSize.Columns - 1; column++)
                 {
                     // Find alive neighbors
                     var aliveNeighbors = 0;

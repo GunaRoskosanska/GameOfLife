@@ -6,7 +6,7 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            GameOfLife game = new GameOfLife();
+            var game = new Logic.GameOfLife();
             game.StartNewGame();
 
             Console.ReadKey();
