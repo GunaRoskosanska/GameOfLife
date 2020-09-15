@@ -7,6 +7,7 @@ namespace GameOfLife.Logic
 {
     public class GameOfLife
     {
+        private GameSaver gameSaver;
         private GamePresenter gamePresenter;
         private CellStatusGenerationManager cellStatusGeneration;
         private Timer timer;
@@ -14,6 +15,7 @@ namespace GameOfLife.Logic
         public GameOfLife()
         {
             gamePresenter = new GamePresenter();
+            gameSaver = new GameSaver();
         }
 
         public void StartNewGame()
@@ -35,17 +37,23 @@ namespace GameOfLife.Logic
 
         private void ContinuePreviousGame()
         {
-            var gameSaver = new GameSaver();
             var gameInfo = gameSaver.Load();
-            cellStatusGeneration = new CellStatusGenerationManager(gameInfo);
-            // To stop the game
-            Console.CancelKeyPress += (sender, args) =>
+            if (gameInfo == null)
             {
-                timer.Enabled = false;
-                Console.WriteLine("\n Ending game.");
-            };
+                NewGame();
+            }
+            else
+            {
+                cellStatusGeneration = new CellStatusGenerationManager(gameInfo);
+                // To stop the game
+                Console.CancelKeyPress += (sender, args) =>
+                {
+                    timer.Enabled = false;
+                    Console.WriteLine("\n Ending game.");
+                };
 
-            StartGameTimer();
+                StartGameTimer();
+            }
         }
 
         private void NewGame()
@@ -83,6 +91,7 @@ namespace GameOfLife.Logic
             };
 
             gamePresenter.Print(gameInfo);
+            gameSaver.Save(gameInfo);
         }
     }
 }

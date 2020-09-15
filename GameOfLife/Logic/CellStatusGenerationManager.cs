@@ -22,7 +22,14 @@ namespace GameOfLife.Logic
             this.GenerationNumber = gameInfo.GenerationNumber;
             this.AliveCells = gameInfo.AliveCells;
             this.currentLifeGenerationGrid = gameInfo.LifesGenerationGrid;
-            this.gridSize = gameInfo.GridSize;
+
+            var rows = this.currentLifeGenerationGrid.GetUpperBound(0) + 1;
+            var columns = this.currentLifeGenerationGrid.Length / rows;
+            this.gridSize = new GridSize
+            {
+                Rows = rows,
+                Columns = columns
+            };
         }
 
         /// <summary>
