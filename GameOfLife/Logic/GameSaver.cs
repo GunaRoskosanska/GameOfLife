@@ -1,24 +1,39 @@
 ﻿using GameOfLife.Model;
+using Newtonsoft.Json;
 using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace GameOfLife.Logic
 {
     class GameSaver
     {
+        private string fileName;
+        public GameSaver(string fileName)
+        {
+            this.fileName = fileName;
+        }
+
         public void Save (GameInfo gameInfo)
         {
-            var jsonString = JsonSerializer.Serialize(gameInfo);
-            File.WriteAllText("C:\\GameOfLife.json", jsonString);
+            EnsureDirectory();
+            var jsonString = JsonConvert.SerializeObject(gameInfo);
+            File.WriteAllText(fileName, jsonString); // file name
+        }
+
+        private void EnsureDirectory()
+        {
+            var directory = Path.GetDirectoryName(fileName);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
         }
 
         public GameInfo Load()
         {
-            if (File.Exists("C:\\GameOfLife.json"))
+            if (File.Exists(fileName))
             {
-                var jsonString = File.ReadAllText("C:\\GameOfLife.json");
-                var gameInfo = JsonSerializer.Deserialize<GameInfo>(jsonString);
+                var jsonString = File.ReadAllText(fileName);
+                var gameInfo = JsonConvert.DeserializeObject<GameInfo>(jsonString);
                 return gameInfo;
             }
             else

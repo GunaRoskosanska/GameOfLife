@@ -15,7 +15,7 @@ namespace GameOfLife.Logic
         public GameOfLife()
         {
             gamePresenter = new GamePresenter();
-            gameSaver = new GameSaver();
+            gameSaver = new GameSaver("C:\\GameOfLife\\data.json");
         }
 
         public void StartNewGame()
