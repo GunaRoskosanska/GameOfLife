@@ -10,6 +10,9 @@ namespace GameOfLife.View
         private const int MaxValue = 50;
         private const string IncorrectEnteredNumberAnnouncement = "Please enter positive numbers only from 1 to 50. ";
 
+        /// <summary>
+        /// Requests to enter number of rows and columns for the game
+        /// </summary>
         public GridSize RequestGridDimensions()
         {
             Console.Write("Enter number of rows (from 1 to 50): ");
@@ -37,6 +40,9 @@ namespace GameOfLife.View
             };
         }
 
+        /// <summary>
+        /// Requests to choose 1 of 3 game options
+        /// </summary>
         public GameOption RequestGameOption()
         {
             while (true)
@@ -59,6 +65,7 @@ namespace GameOfLife.View
             }
         }
 
+        // Shows game options
         private void PrintGameMenu()
         {
             Console.Clear();
@@ -71,15 +78,15 @@ namespace GameOfLife.View
         /// <summary>
         /// Builds a single string then writes to the console by repositioning the cursor
         /// </summary>
-        /// <param name="gameInfo"></param>
+        /// <param name="gameInfo">....</param>
         public void Print(GameInfo gameInfo)
         {
             var cellStatuses = gameInfo.LifesGenerationGrid;
-            var aliveCells = gameInfo.AliveCells;
-            var generationNumber = gameInfo.GenerationNumber;
+            int aliveCells = gameInfo.AliveCells;
+            int generationNumber = gameInfo.GenerationNumber;
 
-            var rows = cellStatuses.GetUpperBound(0) + 1;
-            var columns = cellStatuses.Length / rows;
+            int rows = cellStatuses.GetUpperBound(0) + 1;
+            int columns = cellStatuses.Length / rows;
 
             var stringBuilder = new StringBuilder();
 

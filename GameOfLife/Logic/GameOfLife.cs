@@ -18,6 +18,9 @@ namespace GameOfLife.Logic
             gameSaver = new GameSaver("C:\\GameOfLife\\data.json");
         }
 
+        /// <summary>
+        /// Starts the game
+        /// </summary>
         public void StartNewGame()
         {
             var gameOption = gamePresenter.RequestGameOption();
@@ -25,7 +28,7 @@ namespace GameOfLife.Logic
             switch (gameOption)
             {
                 case GameOption.NewGame:
-                    NewGame();
+                    CreateNewGame();
                     break;
                 case GameOption.ContinuePreviousGame:
                     ContinuePreviousGame();
@@ -35,12 +38,15 @@ namespace GameOfLife.Logic
             }
         }
 
+        /// <summary>
+        /// Continues previous game
+        /// </summary>
         private void ContinuePreviousGame()
         {
             var gameInfo = gameSaver.Load();
             if (gameInfo == null)
             {
-                NewGame();
+                CreateNewGame();
             }
             else
             {
@@ -56,7 +62,10 @@ namespace GameOfLife.Logic
             }
         }
 
-        private void NewGame()
+        /// <summary>
+        /// Creates new game
+        /// </summary>
+        private void CreateNewGame()
         {
             var gridSize = gamePresenter.RequestGridDimensions();
             cellStatusGeneration = new CellStatusGenerationManager(gridSize);
@@ -70,6 +79,9 @@ namespace GameOfLife.Logic
             StartGameTimer();
         }
 
+        /// <summary>
+        /// Enables game timer
+        /// </summary>
         private void StartGameTimer()
         {
             timer = new Timer(1000);

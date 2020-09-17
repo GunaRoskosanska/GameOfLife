@@ -10,8 +10,6 @@ namespace GameOfLife
             game.StartNewGame();
 
             Console.ReadKey();
-
-            // TODO: Add possibility to save information to file and restore it on application start
         }
     }
 }
