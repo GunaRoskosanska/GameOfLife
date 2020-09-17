@@ -23,12 +23,12 @@ namespace GameOfLife.Logic
         public void Save (GameInfo gameInfo)
         {
             EnsureDirectory();
-            string jsonString = JsonConvert.SerializeObject(gameInfo);
-            File.WriteAllText(fileName, jsonString);
+            string json = JsonConvert.SerializeObject(gameInfo);
+            File.WriteAllText(fileName, json);
         }
 
         /// <summary>
-        /// Finds where to save the file with game information
+        /// Ensure directory where to save the file with game information
         /// </summary>
         private void EnsureDirectory()
         {
@@ -40,7 +40,7 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Shows previously saved infromation
+        /// Loads previously saved information
         /// </summary>
         public GameInfo Load()
         {

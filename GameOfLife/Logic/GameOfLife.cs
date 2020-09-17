@@ -23,7 +23,7 @@ namespace GameOfLife.Logic
         /// </summary>
         public void StartNewGame()
         {
-            var gameOption = gamePresenter.RequestGameOption();
+            GameOption gameOption = gamePresenter.RequestGameOption();
 
             switch (gameOption)
             {
@@ -43,7 +43,7 @@ namespace GameOfLife.Logic
         /// </summary>
         private void ContinuePreviousGame()
         {
-            var gameInfo = gameSaver.Load();
+            GameInfo gameInfo = gameSaver.Load();
             if (gameInfo == null)
             {
                 CreateNewGame();
@@ -67,7 +67,7 @@ namespace GameOfLife.Logic
         /// </summary>
         private void CreateNewGame()
         {
-            var gridSize = gamePresenter.RequestGridDimensions();
+            GridSize gridSize = gamePresenter.RequestGridDimensions();
             cellStatusGeneration = new CellStatusGenerationManager(gridSize);
             // To stop the game
             Console.CancelKeyPress += (sender, args) =>
@@ -95,7 +95,7 @@ namespace GameOfLife.Logic
         /// </summary>
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            var gameInfo = new GameInfo
+            GameInfo gameInfo = new GameInfo
             {
                 LifesGenerationGrid = cellStatusGeneration.NextGeneration(),
                 GenerationNumber = cellStatusGeneration.GenerationNumber,

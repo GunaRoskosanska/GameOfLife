@@ -41,7 +41,7 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Requests to choose 1 of 3 game options
+        /// Requests to choose game options (new game, continue previous game, exit)
         /// </summary>
         public GameOption RequestGameOption()
         {
@@ -69,6 +69,7 @@ namespace GameOfLife.View
         private void PrintGameMenu()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Game menu:");
             Console.WriteLine("1 - Start New Game");
             Console.WriteLine("2 - Continue Previous Game");
@@ -76,9 +77,9 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Builds a single string then writes to the console by repositioning the cursor
+        /// Shows on screen state of game
         /// </summary>
-        /// <param name="gameInfo">....</param>
+        /// <param name="gameInfo">Game information</param>
         public void Print(GameInfo gameInfo)
         {
             var cellStatuses = gameInfo.LifesGenerationGrid;
