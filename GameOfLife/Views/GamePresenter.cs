@@ -4,6 +4,9 @@ using System.Text;
 
 namespace GameOfLife.View
 {
+    /// <summary>
+    /// Information of Game of Life that has to be shown to user
+    /// </summary>
     public class GamePresenter
     {
         private const int MinValue = 1;
@@ -66,7 +69,7 @@ namespace GameOfLife.View
         }
 
         // Shows game options
-        private void PrintGameMenu()
+        public void PrintGameMenu()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;

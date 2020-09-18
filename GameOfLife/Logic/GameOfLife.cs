@@ -5,6 +5,9 @@ using System.Timers;
 
 namespace GameOfLife.Logic
 {
+    /// <summary>
+    /// Game of life main logic part
+    /// </summary>
     public class GameOfLife
     {
         private GameSaver gameSaver;
@@ -12,6 +15,9 @@ namespace GameOfLife.Logic
         private CellStatusGenerationManager cellStatusGeneration;
         private Timer timer;
 
+        /// <summary>
+        /// Game of life
+        /// </summary>
         public GameOfLife()
         {
             gamePresenter = new GamePresenter();

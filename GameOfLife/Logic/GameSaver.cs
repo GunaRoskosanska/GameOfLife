@@ -4,9 +4,13 @@ using System.IO;
 
 namespace GameOfLife.Logic
 {
+    /// <summary>
+    /// Saves the game
+    /// </summary>
     public class GameSaver
     {
         private string fileName;
+
         /// <summary>
         /// Shows where to save the game
         /// </summary>

@@ -4,6 +4,9 @@ using System.Security.Cryptography;
 
 namespace GameOfLife.Logic
 {
+    /// <summary>
+    /// Generates cells statuses in the grid
+    /// </summary>
     public class CellStatusGenerationManager
     {
         private CellStatus[,] currentLifeGenerationGrid;
@@ -12,6 +15,10 @@ namespace GameOfLife.Logic
         public int AliveCells { get; private set; }
         public int GenerationNumber { get; private set; }
 
+        /// <summary>
+        /// Generates cells statuses in the grid
+        /// </summary>
+        /// <param name="gridSize">Grid size</param>
         public CellStatusGenerationManager(GridSize gridSize)
         {
             this.gridSize = gridSize;
