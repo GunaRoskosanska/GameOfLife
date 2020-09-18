@@ -1,4 +1,4 @@
-﻿using GameOfLife.Model;
+﻿using GameOfLife.Models;
 using GameOfLife.View;
 using System;
 using System.Timers;

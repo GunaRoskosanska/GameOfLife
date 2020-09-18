@@ -1,4 +1,4 @@
-﻿namespace GameOfLife.Model
+﻿namespace GameOfLife.Models
 {
     /// <summary>
     /// There are 3 game options

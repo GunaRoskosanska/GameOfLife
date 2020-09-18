@@ -1,4 +1,4 @@
-﻿namespace GameOfLife.Model
+﻿namespace GameOfLife.Models
 {
     /// <summary>
     /// Information about the game

@@ -1,5 +1,4 @@
-﻿using GameOfLife.Model;
-using System;
+﻿using GameOfLife.Models;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -57,9 +56,9 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Counts alive cells in the generation
+        /// Counts alive cells in the grid
         /// </summary>
-        /// <param name="lifeGenerationGrid">Life generation used to calculate alive cells</param>
+        /// <param name="lifeGenerationGrid">Used to specify life generation grid</param>
         private int CalculateAliveCells(CellStatus[,] lifeGenerationGrid)
         {
             // As dead = 0, alive = 1, than sum of all cells = alive cells sum
@@ -74,9 +73,9 @@ namespace GameOfLife.Logic
             var grid = new CellStatus[gridSize.Rows, gridSize.Columns];
 
             // Randomly initialize grid
-            for (int row = 0; row < gridSize.Rows; row++)
+            for (var row = 0; row < gridSize.Rows; row++)
             {
-                for (int column = 0; column < gridSize.Columns; column++)
+                for (var column = 0; column < gridSize.Columns; column++)
                 {
                     grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
                 }
@@ -93,15 +92,15 @@ namespace GameOfLife.Logic
             var nextGeneration = new CellStatus[gridSize.Rows, gridSize.Columns];
 
             // Loop through every cell
-            for (int row = 1; row < gridSize.Rows - 1; row++)
+            for (var row = 1; row < gridSize.Rows - 1; row++)
             {
-                for (int column = 1; column < gridSize.Columns - 1; column++)
+                for (var column = 1; column < gridSize.Columns - 1; column++)
                 {
                     // Find alive neighbors
                     var aliveNeighbors = 0;
-                    for (int i = -1; i <= 1; i++)
+                    for (var i = -1; i <= 1; i++)
                     {
-                        for (int j = -1; j <= 1; j++)
+                        for (var j = -1; j <= 1; j++)
                         {
                             aliveNeighbors += lifeGenerationGrid[row + i, column + j] == CellStatus.Alive ? 1 : 0;
                         }

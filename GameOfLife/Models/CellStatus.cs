@@ -1,4 +1,4 @@
-﻿namespace GameOfLife.Model
+﻿namespace GameOfLife.Models
 {
     /// <summary>
     /// Cells can have 1 of 2 statuses - dead or alive

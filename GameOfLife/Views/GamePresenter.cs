@@ -1,4 +1,4 @@
-﻿using GameOfLife.Model;
+﻿using GameOfLife.Models;
 using System;
 using System.Text;
 

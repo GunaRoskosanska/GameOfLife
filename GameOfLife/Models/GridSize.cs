@@ -1,7 +1,7 @@
-﻿namespace GameOfLife.Model
+﻿namespace GameOfLife.Models
 {
     /// <summary>
-    /// Grid has 2 parameters: count of rows and columns
+    /// Size of Game of life grid
     /// </summary>
     public class GridSize
     {

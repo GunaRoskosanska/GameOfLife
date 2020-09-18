@@ -1,4 +1,4 @@
-﻿using GameOfLife.Model;
+﻿using GameOfLife.Models;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -23,12 +23,12 @@ namespace GameOfLife.Logic
         public void Save (GameInfo gameInfo)
         {
             EnsureDirectory();
-            string json = JsonConvert.SerializeObject(gameInfo);
-            File.WriteAllText(fileName, json);
+            string gameInfoJsonData = JsonConvert.SerializeObject(gameInfo);
+            File.WriteAllText(fileName, gameInfoJsonData);
         }
 
         /// <summary>
-        /// Ensure directory where to save the file with game information
+        /// Finds where to save the file with game information
         /// </summary>
         private void EnsureDirectory()
         {
@@ -40,7 +40,7 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Loads previously saved information
+        /// Shows previously saved infromation
         /// </summary>
         public GameInfo Load()
         {
