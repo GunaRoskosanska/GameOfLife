@@ -14,33 +14,47 @@ namespace GameOfLife.View
         private const string IncorrectEnteredNumberAnnouncement = "Please enter positive numbers only from 1 to 50. ";
 
         /// <summary>
+        /// Occurs when Ctrl+C
+        /// </summary>
+        public event Action CancelKeyPress = delegate { };
+
+        /// <summary>
+        /// Game presenter constructor
+        /// </summary>
+        public GamePresenter()
+        {
+            Console.CancelKeyPress += (s, e) => CancelKeyPress?.Invoke();
+        }
+
+        /// <summary>
         /// Requests to enter number of rows and columns for the game
         /// </summary>
         public GridSize RequestGridDimensions()
         {
             Console.Write("Enter number of rows (from 1 to 50): ");
-            int.TryParse(Console.ReadLine(), out var rows);
-
-            while (rows < MinValue || rows > MaxValue)
-            {
-                Console.Write(IncorrectEnteredNumberAnnouncement);
-                int.TryParse(Console.ReadLine(), out rows);
-            }
+            int rows = ReadNumber();
 
             Console.Write("Enter number of columns (from 1 to 50): ");
-            int.TryParse(Console.ReadLine(), out var columns);
-
-            while (columns < MinValue || columns > MaxValue)
-            {
-                Console.Write(IncorrectEnteredNumberAnnouncement);
-                int.TryParse(Console.ReadLine(), out columns);
-            }
+            var columns = ReadNumber();
 
             return new GridSize
             {
                 Columns = columns,
                 Rows = rows
             };
+        }
+
+        private static int ReadNumber()
+        {
+            int.TryParse(Console.ReadLine(), out int count);
+
+            while (count < MinValue || count > MaxValue)
+            {
+                Console.Write(IncorrectEnteredNumberAnnouncement);
+                int.TryParse(Console.ReadLine(), out count);
+            }
+
+            return count;
         }
 
         /// <summary>

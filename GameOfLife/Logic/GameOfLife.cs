@@ -58,11 +58,7 @@ namespace GameOfLife.Logic
             {
                 cellStatusGeneration = new CellStatusGenerationManager(gameInfo);
                 // To stop the game
-                Console.CancelKeyPress += (sender, args) =>
-                {
-                    timer.Enabled = false;
-                    Console.WriteLine("\n Ending game.");
-                };
+                gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
 
                 StartGameTimer();
             }
@@ -76,13 +72,17 @@ namespace GameOfLife.Logic
             GridSize gridSize = gamePresenter.RequestGridDimensions();
             cellStatusGeneration = new CellStatusGenerationManager(gridSize);
             // To stop the game
-            Console.CancelKeyPress += (sender, args) =>
-            {
-                timer.Enabled = false;
-                Console.WriteLine("\n Ending game.");
-            };
+            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
 
             StartGameTimer();
+        }
+        /// <summary>
+        /// Handles cancel key press
+        /// </summary>
+        private void GamePresenterCancelKeyPress()
+        {
+            timer.Enabled = false;
+            gamePresenter.CancelKeyPress -= GamePresenterCancelKeyPress;
         }
 
         /// <summary>
