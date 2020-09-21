@@ -1,5 +1,6 @@
 ﻿using GameOfLife.Models;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 
 namespace GameOfLife.Logic
@@ -44,18 +45,21 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Shows previously saved infromation
+        /// Shows previously saved information
         /// </summary>
         public GameInfo Load()
         {
-            if (File.Exists(fileName))
+            try
             {
                 string jsonInformation = File.ReadAllText(fileName);
                 var gameInfo = JsonConvert.DeserializeObject<GameInfo>(jsonInformation);
                 return gameInfo;
             }
-
-            return null;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + " Please start a new game.") ;
+                return null;
+            }
         } 
     }
 }

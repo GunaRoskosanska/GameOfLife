@@ -22,7 +22,7 @@ namespace GameOfLife.View
         /// Game presenter constructor
         /// </summary>
         public GamePresenter()
-        {
+        { 
             Console.CancelKeyPress += (s, e) => CancelKeyPress?.Invoke();
         }
 
@@ -114,6 +114,11 @@ namespace GameOfLife.View
                 {
                     var cell = cellStatuses[row, column];
                     stringBuilder.Append(cell == CellStatus.Alive ? "@" : " ");
+
+                    if (cell == CellStatus.Alive)
+                    {
+                        aliveCells++;
+                    }
                 }
                 stringBuilder.AppendLine();
             }

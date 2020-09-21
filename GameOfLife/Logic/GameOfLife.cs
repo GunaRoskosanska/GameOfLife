@@ -1,6 +1,7 @@
 ﻿using GameOfLife.Models;
 using GameOfLife.View;
 using System;
+using System.IO;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -50,6 +51,7 @@ namespace GameOfLife.Logic
         private void ContinuePreviousGame()
         {
             GameInfo gameInfo = gameSaver.Load();
+
             if (gameInfo == null)
             {
                 CreateNewGame();

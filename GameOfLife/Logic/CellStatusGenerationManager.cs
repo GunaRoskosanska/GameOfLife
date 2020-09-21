@@ -58,18 +58,7 @@ namespace GameOfLife.Logic
             }
 
             GenerationNumber++;
-            AliveCells = CalculateAliveCells(currentLifeGenerationGrid);
             return currentLifeGenerationGrid;
-        }
-
-        /// <summary>
-        /// Counts alive cells in the grid
-        /// </summary>
-        /// <param name="lifeGenerationGrid">Used to specify life generation grid</param>
-        private int CalculateAliveCells(CellStatus[,] lifeGenerationGrid)
-        {
-            // As dead = 0, alive = 1, than sum of all cells = alive cells sum
-            return lifeGenerationGrid.Cast<int>().Sum();
         }
 
         /// <summary>
