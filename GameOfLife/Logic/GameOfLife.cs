@@ -1,7 +1,5 @@
 ﻿using GameOfLife.Models;
 using GameOfLife.View;
-using System;
-using System.IO;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -48,7 +46,7 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Continues previous game
         /// </summary>
-        private void ContinuePreviousGame()
+        public void ContinuePreviousGame()
         {
             GameInfo gameInfo = gameSaver.Load();
 
@@ -69,7 +67,7 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Creates new game
         /// </summary>
-        private void CreateNewGame()
+        public void CreateNewGame()
         {
             GridSize gridSize = gamePresenter.RequestGridDimensions();
             cellStatusGeneration = new CellStatusGenerationManager(gridSize);
@@ -85,6 +83,7 @@ namespace GameOfLife.Logic
         {
             timer.Enabled = false;
             gamePresenter.CancelKeyPress -= GamePresenterCancelKeyPress;
+            //StartNewGame();
         }
 
         /// <summary>

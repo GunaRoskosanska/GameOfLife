@@ -1,5 +1,4 @@
 ﻿using GameOfLife.Models;
-using System.Linq;
 using System.Security.Cryptography;
 
 namespace GameOfLife.Logic

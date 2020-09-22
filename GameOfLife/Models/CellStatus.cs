@@ -9,6 +9,7 @@
         /// Status of cell - dead
         /// </summary>
         Dead = 0,
+
         /// <summary>
         /// Status of cell - alive
         /// </summary>

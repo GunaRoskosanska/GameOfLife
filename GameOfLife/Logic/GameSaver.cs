@@ -57,7 +57,7 @@ namespace GameOfLife.Logic
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message + " Please start a new game.") ;
+                Console.WriteLine(e.Message + " Please start a new game.");
                 return null;
             }
         } 
