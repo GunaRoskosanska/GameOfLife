@@ -1,5 +1,6 @@
 ﻿using GameOfLife.Models;
 using GameOfLife.View;
+using System;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -14,6 +15,7 @@ namespace GameOfLife.Logic
         private CellStatusGenerationManager cellStatusGeneration;
         private Timer timer;
 
+        public bool IsRunning { get; private set; }
         /// <summary>
         /// Game of life
         /// </summary>
@@ -28,6 +30,7 @@ namespace GameOfLife.Logic
         /// </summary>
         public void StartNewGame()
         {
+            IsRunning = true;
             GameOption gameOption = gamePresenter.RequestGameOption();
 
             switch (gameOption)
@@ -39,6 +42,7 @@ namespace GameOfLife.Logic
                     ContinuePreviousGame();
                     break;
                 case GameOption.Exit:
+                    IsRunning = false;
                     return;
             }
         }
@@ -83,7 +87,7 @@ namespace GameOfLife.Logic
         {
             timer.Enabled = false;
             gamePresenter.CancelKeyPress -= GamePresenterCancelKeyPress;
-            //StartNewGame();
+            StartNewGame();
         }
 
         /// <summary>

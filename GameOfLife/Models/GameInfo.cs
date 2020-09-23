@@ -19,5 +19,10 @@
         /// Count of alive cells in the grid
         /// </summary>
         public int AliveCells { get; set; }
+
+        /// <summary>
+        /// Number of the game from 1 to 1000
+        /// </summary>
+        public int GameNumber { get; set; }
     }
 }
