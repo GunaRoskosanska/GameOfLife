@@ -16,6 +16,7 @@ namespace GameOfLife.Logic
         private Timer timer;
 
         public bool IsRunning { get; private set; }
+
         /// <summary>
         /// Game of life
         /// </summary>
@@ -86,6 +87,7 @@ namespace GameOfLife.Logic
         private void GamePresenterCancelKeyPress()
         {
             timer.Enabled = false;
+            timer.Elapsed -= OnTimerElapsed;
             gamePresenter.CancelKeyPress -= GamePresenterCancelKeyPress;
             StartNewGame();
         }

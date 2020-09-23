@@ -22,8 +22,12 @@ namespace GameOfLife.View
         /// Game presenter constructor
         /// </summary>
         public GamePresenter()
-        { 
-            Console.CancelKeyPress += (s, e) => CancelKeyPress?.Invoke();
+        {
+            Console.CancelKeyPress += (s, e) =>
+            {
+                e.Cancel = true;
+                CancelKeyPress?.Invoke();
+            };
         }
 
         /// <summary>
