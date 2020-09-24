@@ -6,10 +6,10 @@ namespace GameOfLife.Logic
     /// <summary>
     /// Generates cells statuses in the grid
     /// </summary>
-    public class CellStatusGenerationManager
+    public class WorldGenerator
     {
         private CellStatus[,] currentLifeGenerationGrid;
-        private GridSize gridSize;
+        private WorldSize gridSize;
 
         public int AliveCells { get; private set; }
         public int GenerationNumber { get; private set; }
@@ -18,7 +18,7 @@ namespace GameOfLife.Logic
         /// Generates cells statuses in the grid
         /// </summary>
         /// <param name="gridSize">Grid size</param>
-        public CellStatusGenerationManager(GridSize gridSize)
+        public WorldGenerator(WorldSize gridSize)
         {
             this.gridSize = gridSize;
         }
@@ -27,7 +27,7 @@ namespace GameOfLife.Logic
         /// Generates status of each cell in the grid
         /// </summary>
         /// <param name="gameInfo">Game information</param>
-        public CellStatusGenerationManager(GameInfo gameInfo)
+        public WorldGenerator(WorldInfo gameInfo)
         {
             this.GenerationNumber = gameInfo.GenerationNumber;
             this.AliveCells = gameInfo.AliveCells;
@@ -35,7 +35,7 @@ namespace GameOfLife.Logic
 
             int rows = this.currentLifeGenerationGrid.GetUpperBound(0) + 1;
             int columns = this.currentLifeGenerationGrid.Length / rows;
-            this.gridSize = new GridSize
+            this.gridSize = new WorldSize
             {
                 Rows = rows,
                 Columns = columns
@@ -83,6 +83,8 @@ namespace GameOfLife.Logic
                     }
                 }
             }
+
+            AliveCells = aliveCells;
             return grid;
         }
 
@@ -92,6 +94,7 @@ namespace GameOfLife.Logic
         /// <param name="lifeGenerationGrid">Used to specify life generation grid</param>
         private CellStatus[,] NextGeneration(CellStatus[,] lifeGenerationGrid)
         {
+            int aliveCells = 0;
             var nextGeneration = new CellStatus[gridSize.Rows, gridSize.Columns];
 
             // Loop through every cell
@@ -130,21 +133,15 @@ namespace GameOfLife.Logic
                     {
                         nextGeneration[row, column] = currentCell;
                     }
-                }
-            }
-            int aliveCells = 0;
-            for (var row = 0; row < gridSize.Rows; row++)
-            {
-                for (var column = 0; column < gridSize.Columns; column++)
-                {
-                    var cell = nextGeneration[row, column];
 
-                    if (cell == CellStatus.Alive)
+                    if(currentCell == CellStatus.Alive)
                     {
                         aliveCells++;
                     }
                 }
             }
+
+            AliveCells = aliveCells;
             return nextGeneration;
         }
     }

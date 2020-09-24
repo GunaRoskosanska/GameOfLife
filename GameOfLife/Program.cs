@@ -1,6 +1,4 @@
-﻿using GameOfLife.Models;
-using System;
-using System.Threading;
+﻿using System.Threading;
 
 namespace GameOfLife
 {
@@ -11,7 +9,7 @@ namespace GameOfLife
             var game = new Logic.GameOfLife();
             game.StartNewGame();
 
-            while(game.IsRunning)
+            while (game.IsRunning)
             {
                 Thread.Sleep(millisecondsTimeout: 1500);
             }

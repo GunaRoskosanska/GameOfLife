@@ -25,7 +25,7 @@ namespace GameOfLife.Logic
         /// Saves the game
         /// </summary>
         /// <param name="gameInfo">Information about the game that has to be saved</param>
-        public void Save (GameInfo gameInfo)
+        public void Save (WorldInfo gameInfo)
         {
             try
             {
@@ -55,12 +55,12 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Shows previously saved information
         /// </summary>
-        public GameInfo Load()
+        public WorldInfo Load()
         {
             try
             {
                 string jsonInformation = File.ReadAllText(fileName);
-                var gameInfo = JsonConvert.DeserializeObject<GameInfo>(jsonInformation);
+                var gameInfo = JsonConvert.DeserializeObject<WorldInfo>(jsonInformation);
                 return gameInfo;
             }
             catch (Exception e)

@@ -3,7 +3,7 @@
     /// <summary>
     /// Information about the game
     /// </summary>
-    public class GameInfo
+    public class WorldInfo
     {
         /// <summary>
         /// One generation grid of dead and alive cells
@@ -23,14 +23,15 @@
         /// <summary>
         /// Number of the game from 1 to 1000
         /// </summary>
-        public int GameNumber { get; set; }
+        public int Id { get; set; }
 
-        public GameInfo(int gameNumber, int aliveCells, int generationNumber, CellStatus[,] lifesGenerationGrid)
+        /// <summary>
+        /// Determines whether the world is alive
+        /// </summary>
+        public bool IsAlive { get; set; }
+
+        public WorldInfo()
         {
-            GameNumber = gameNumber;
-            AliveCells = aliveCells;
-            GenerationNumber = generationNumber;
-            LifesGenerationGrid = lifesGenerationGrid;
         }
     }
 }

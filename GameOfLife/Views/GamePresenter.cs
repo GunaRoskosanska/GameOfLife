@@ -33,7 +33,7 @@ namespace GameOfLife.View
         /// <summary>
         /// Requests to enter number of rows and columns for the game
         /// </summary>
-        public GridSize RequestGridDimensions()
+        public WorldSize RequestWorldSize()
         {
             Console.Write("Enter number of rows (from 1 to 50): ");
             int rows = ReadNumber();
@@ -41,7 +41,7 @@ namespace GameOfLife.View
             Console.Write("Enter number of columns (from 1 to 50): ");
             var columns = ReadNumber();
 
-            return new GridSize
+            return new WorldSize
             {
                 Columns = columns,
                 Rows = rows
@@ -86,6 +86,14 @@ namespace GameOfLife.View
             }
         }
 
+        public int RequestNumberOfWorlds()
+        {
+            Console.Write("Enter number of worlds (from 1 to 1000): ");
+            int numberOfWorld = ReadNumber();
+
+            return numberOfWorld;
+        }
+
         // Shows game options
         public void PrintGameMenu()
         {
@@ -101,7 +109,7 @@ namespace GameOfLife.View
         /// Shows on screen state of game
         /// </summary>
         /// <param name="gameInfo">Game information</param>
-        public void Print(GameInfo gameInfo)
+        public void Print(WorldInfo gameInfo)
         {
             var cellStatuses = gameInfo.LifesGenerationGrid;
             int aliveCells = gameInfo.AliveCells;

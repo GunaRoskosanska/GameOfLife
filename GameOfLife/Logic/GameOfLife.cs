@@ -1,6 +1,7 @@
 ﻿using GameOfLife.Models;
 using GameOfLife.View;
 using System;
+using System.Collections.Generic;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -12,8 +13,8 @@ namespace GameOfLife.Logic
     {
         private GameSaver gameSaver;
         private GamePresenter gamePresenter;
-        private CellStatusGenerationManager cellStatusGeneration;
         private Timer timer;
+        private List<World> worlds;
 
         public bool IsRunning { get; private set; }
 
@@ -22,8 +23,10 @@ namespace GameOfLife.Logic
         /// </summary>
         public GameOfLife()
         {
+            worlds = new List<World>();
             gamePresenter = new GamePresenter();
             gameSaver = new GameSaver("C:\\GameOfLife\\data.json");
+            IsRunning = true;
         }
 
         /// <summary>
@@ -31,7 +34,6 @@ namespace GameOfLife.Logic
         /// </summary>
         public void StartNewGame()
         {
-            IsRunning = true;
             GameOption gameOption = gamePresenter.RequestGameOption();
 
             switch (gameOption)
@@ -53,7 +55,7 @@ namespace GameOfLife.Logic
         /// </summary>
         public void ContinuePreviousGame()
         {
-            GameInfo gameInfo = gameSaver.Load();
+            WorldInfo gameInfo = gameSaver.Load();
 
             if (gameInfo == null)
             {
@@ -61,7 +63,7 @@ namespace GameOfLife.Logic
             }
             else
             {
-                cellStatusGeneration = new CellStatusGenerationManager(gameInfo);
+                //cellStatusGeneration = new WorldGenerator(gameInfo);
                 // To stop the game
                 gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
 
@@ -74,8 +76,16 @@ namespace GameOfLife.Logic
         /// </summary>
         public void CreateNewGame()
         {
-            GridSize gridSize = gamePresenter.RequestGridDimensions();
-            cellStatusGeneration = new CellStatusGenerationManager(gridSize);
+            var countOfWorlds = gamePresenter.RequestNumberOfWorlds();
+            WorldSize worldSize = gamePresenter.RequestWorldSize();
+
+            for(int i = 1; i <= countOfWorlds; i++)
+            {
+                var world = new World(i, worldSize);
+
+                worlds.Add(world);
+            }
+            
             // To stop the game
             gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
 
@@ -108,15 +118,15 @@ namespace GameOfLife.Logic
         /// </summary>
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            GameInfo gameInfo = new GameInfo
+            Console.Clear();
+            foreach (var world in worlds)
             {
-                LifesGenerationGrid = cellStatusGeneration.NextGeneration(),
-                GenerationNumber = cellStatusGeneration.GenerationNumber,
-                AliveCells = cellStatusGeneration.AliveCells,
-            };
+                var wordlInformation = world.NextGeneration();
+                Console.WriteLine($"World ID: {wordlInformation.Id,4} | Generation : {wordlInformation.GenerationNumber,4} | Lives: {wordlInformation.AliveCells}");
+            }
 
-            gamePresenter.Print(gameInfo);
-            gameSaver.Save(gameInfo);
+            //gamePresenter.Print(gameInfo);
+            //gameSaver.Save(gameInfo);
         }
     }
 }

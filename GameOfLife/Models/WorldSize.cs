@@ -3,7 +3,7 @@
     /// <summary>
     /// Size of "Game of life" grid
     /// </summary>
-    public class GridSize
+    public class WorldSize
     {
         /// <summary>
         /// Count of rows in the grid
