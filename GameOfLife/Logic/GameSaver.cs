@@ -27,9 +27,17 @@ namespace GameOfLife.Logic
         /// <param name="gameInfo">Information about the game that has to be saved</param>
         public void Save (GameInfo gameInfo)
         {
-            EnsureDirectory();
-            string gameInfoJsonData = JsonConvert.SerializeObject(gameInfo);
-            File.WriteAllText(fileName, gameInfoJsonData);
+            try
+            {
+                EnsureDirectory();
+                string gameInfoJsonData = JsonConvert.SerializeObject(gameInfo);
+                File.WriteAllText(fileName, gameInfoJsonData);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Can not save the game. Reason: " + e.Message);
+            }
+
         }
 
         /// <summary>

@@ -66,6 +66,7 @@ namespace GameOfLife.Logic
         private CellStatus[,] FirstGeneration()
         {
             var grid = new CellStatus[gridSize.Rows, gridSize.Columns];
+            int aliveCells = 0;
 
             // Randomly initialize grid
             for (var row = 0; row < gridSize.Rows; row++)
@@ -73,6 +74,13 @@ namespace GameOfLife.Logic
                 for (var column = 0; column < gridSize.Columns; column++)
                 {
                     grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
+
+                    var cell = grid[row, column];
+
+                    if (cell == CellStatus.Alive)
+                    {
+                        aliveCells++;
+                    }
                 }
             }
             return grid;
@@ -121,6 +129,19 @@ namespace GameOfLife.Logic
                     else // Stays the same
                     {
                         nextGeneration[row, column] = currentCell;
+                    }
+                }
+            }
+            int aliveCells = 0;
+            for (var row = 0; row < gridSize.Rows; row++)
+            {
+                for (var column = 0; column < gridSize.Columns; column++)
+                {
+                    var cell = nextGeneration[row, column];
+
+                    if (cell == CellStatus.Alive)
+                    {
+                        aliveCells++;
                     }
                 }
             }

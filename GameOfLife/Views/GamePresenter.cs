@@ -119,10 +119,10 @@ namespace GameOfLife.View
                     var cell = cellStatuses[row, column];
                     stringBuilder.Append(cell == CellStatus.Alive ? "@" : " ");
 
-                    if (cell == CellStatus.Alive)
-                    {
-                        aliveCells++;
-                    }
+                    //if (cell == CellStatus.Alive)
+                    //{
+                    //    aliveCells++;
+                    //}
                 }
                 stringBuilder.AppendLine();
             }
