@@ -95,7 +95,7 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Enables game timer
         /// </summary>
-        private void StartGameTimer()
+        public void StartGameTimer()
         {
             timer = new Timer(1000);
             timer.Elapsed += OnTimerElapsed;
@@ -112,7 +112,7 @@ namespace GameOfLife.Logic
             {
                 LifesGenerationGrid = cellStatusGeneration.NextGeneration(),
                 GenerationNumber = cellStatusGeneration.GenerationNumber,
-                AliveCells = cellStatusGeneration.AliveCells
+                AliveCells = cellStatusGeneration.AliveCells,
             };
 
             gamePresenter.Print(gameInfo);

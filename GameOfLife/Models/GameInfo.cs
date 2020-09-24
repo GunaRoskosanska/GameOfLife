@@ -24,5 +24,13 @@
         /// Number of the game from 1 to 1000
         /// </summary>
         public int GameNumber { get; set; }
+
+        public GameInfo(int gameNumber, int aliveCells, int generationNumber, CellStatus[,] lifesGenerationGrid)
+        {
+            GameNumber = gameNumber;
+            AliveCells = aliveCells;
+            GenerationNumber = generationNumber;
+            LifesGenerationGrid = lifesGenerationGrid;
+        }
     }
 }
