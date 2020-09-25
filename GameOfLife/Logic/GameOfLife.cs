@@ -19,7 +19,7 @@ namespace GameOfLife.Logic
         public bool IsRunning { get; private set; }
 
         /// <summary>
-        /// Game of life
+        /// Game of life constructor
         /// </summary>
         public GameOfLife()
         {

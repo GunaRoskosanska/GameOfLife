@@ -10,8 +10,8 @@ namespace GameOfLife.View
     public class GamePresenter
     {
         private const int MinValue = 1;
-        private const int MaxValue = 50;
-        private const string IncorrectEnteredNumberAnnouncement = "Please enter positive numbers only from 1 to 50. ";
+        private const int MaxValue = 1000;
+        private const string IncorrectEnteredNumberAnnouncement = "Please enter positive numbers only from 1 to 1000. ";
 
         /// <summary>
         /// Occurs when Ctrl+C
@@ -35,10 +35,10 @@ namespace GameOfLife.View
         /// </summary>
         public WorldSize RequestWorldSize()
         {
-            Console.Write("Enter number of rows (from 1 to 50): ");
+            Console.Write("Enter number of rows (from 1 to 1000): ");
             int rows = ReadNumber();
 
-            Console.Write("Enter number of columns (from 1 to 50): ");
+            Console.Write("Enter number of columns (from 1 to 1000): ");
             var columns = ReadNumber();
 
             return new WorldSize
@@ -126,11 +126,6 @@ namespace GameOfLife.View
                 {
                     var cell = cellStatuses[row, column];
                     stringBuilder.Append(cell == CellStatus.Alive ? "@" : " ");
-
-                    //if (cell == CellStatus.Alive)
-                    //{
-                    //    aliveCells++;
-                    //}
                 }
                 stringBuilder.AppendLine();
             }
