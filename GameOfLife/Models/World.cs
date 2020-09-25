@@ -2,6 +2,9 @@
 
 namespace GameOfLife.Models
 {
+    /// <summary>
+    /// Information about the World
+    /// </summary>
     public class World
     {
         private WorldGenerator worldGenerator;

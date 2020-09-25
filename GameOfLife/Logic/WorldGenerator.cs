@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 namespace GameOfLife.Logic
 {
     /// <summary>
-    /// Generates cells statuses in the grid
+    /// Generates cells statuses in the grid (world)
     /// </summary>
     public class WorldGenerator
     {

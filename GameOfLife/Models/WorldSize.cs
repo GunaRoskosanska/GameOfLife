@@ -1,7 +1,7 @@
 ﻿namespace GameOfLife.Models
 {
     /// <summary>
-    /// Size of "Game of life" grid
+    /// Size of World (measured by rows and columns)
     /// </summary>
     public class WorldSize
     {
