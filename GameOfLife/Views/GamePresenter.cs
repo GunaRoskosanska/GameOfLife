@@ -48,6 +48,10 @@ namespace GameOfLife.View
             };
         }
 
+        /// <summary>
+        /// Reviews entered values (if they are numbers from 1 to 1000)
+        /// </summary>
+        /// <returns></returns>
         private static int ReadNumber()
         {
             int.TryParse(Console.ReadLine(), out int count);
@@ -86,6 +90,10 @@ namespace GameOfLife.View
             }
         }
 
+        /// <summary>
+        /// Requests to enter number of worlds (games) to execure in parallel
+        /// </summary>
+        /// <returns></returns>
         public int RequestNumberOfWorlds()
         {
             Console.Write("Enter number of worlds (from 1 to 1000): ");
@@ -108,12 +116,16 @@ namespace GameOfLife.View
         /// <summary>
         /// Shows on screen state of game
         /// </summary>
-        /// <param name="gameInfo">Game information</param>
-        public void Print(WorldInfo gameInfo)
+        /// <param name="worldInfo">Game information</param>
+        public void Print(WorldInfo worldInfo)
         {
-            var cellStatuses = gameInfo.LifesGenerationGrid;
-            int aliveCells = gameInfo.AliveCells;
-            int generationNumber = gameInfo.GenerationNumber;
+            var worldAliveStatus = worldInfo.IsWorldAlive ? "Alive" : "Dead";
+            Console.WriteLine($"World ID: {worldInfo.Id,4} | Generation : {worldInfo.GenerationNumber,4} | Lives: {worldInfo.AliveCells,4} | {worldAliveStatus}");
+
+            return;
+            var cellStatuses = worldInfo.LifesGenerationGrid;
+            int aliveCells = worldInfo.AliveCells;
+            int generationNumber = worldInfo.GenerationNumber;
 
             int rows = cellStatuses.GetUpperBound(0) + 1;
             int columns = cellStatuses.Length / rows;

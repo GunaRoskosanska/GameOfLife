@@ -122,7 +122,7 @@ namespace GameOfLife.Logic
             foreach (var world in worlds)
             {
                 var wordlInformation = world.NextGeneration();
-                Console.WriteLine($"World ID: {wordlInformation.Id,4} | Generation : {wordlInformation.GenerationNumber,4} | Lives: {wordlInformation.AliveCells}");
+                gamePresenter.Print(wordlInformation);
             }
 
             //gamePresenter.Print(gameInfo);

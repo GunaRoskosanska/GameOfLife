@@ -28,7 +28,7 @@
         /// <summary>
         /// Determines whether the world is alive
         /// </summary>
-        public bool IsAlive { get; set; }
+        public bool IsWorldAlive { get; set; }
 
         public WorldInfo()
         {

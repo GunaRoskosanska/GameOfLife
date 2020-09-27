@@ -17,7 +17,7 @@ namespace GameOfLife.Models
         public World(int id, WorldSize worldSize)
         {
             Id = id;
-            worldGenerator = new WorldGenerator(worldSize);
+            worldGenerator = new WorldGenerator(Id, worldSize);
         }
 
         /// <summary>
@@ -25,18 +25,7 @@ namespace GameOfLife.Models
         /// </summary>
         public WorldInfo NextGeneration()
         {
-            var generation = worldGenerator.NextGeneration();
-
-            var worldInfo = new WorldInfo
-            {
-                Id = Id,
-                AliveCells = worldGenerator.AliveCells,
-                GenerationNumber = worldGenerator.GenerationNumber,
-                LifesGenerationGrid = generation,
-                IsAlive = true //TODO: Ask about PrevGeneration.GetHashCode() != CurrentGeneration.GetHasCode() 
-            };
-
-            return worldInfo;
+            return worldGenerator.NextGeneration();
         }
     }
 }

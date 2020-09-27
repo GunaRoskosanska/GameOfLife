@@ -9,17 +9,18 @@ namespace GameOfLife.Logic
     public class WorldGenerator
     {
         private CellStatus[,] currentLifeGenerationGrid;
+        private readonly int id;
         private WorldSize gridSize;
 
-        public int AliveCells { get; private set; }
         public int GenerationNumber { get; private set; }
 
         /// <summary>
         /// Generates cells statuses in the grid
         /// </summary>
         /// <param name="gridSize">Grid size</param>
-        public WorldGenerator(WorldSize gridSize)
+        public WorldGenerator(int id, WorldSize gridSize)
         {
+            this.id = id;
             this.gridSize = gridSize;
         }
 
@@ -30,7 +31,6 @@ namespace GameOfLife.Logic
         public WorldGenerator(WorldInfo gameInfo)
         {
             this.GenerationNumber = gameInfo.GenerationNumber;
-            this.AliveCells = gameInfo.AliveCells;
             this.currentLifeGenerationGrid = gameInfo.LifesGenerationGrid;
 
             int rows = this.currentLifeGenerationGrid.GetUpperBound(0) + 1;
@@ -45,27 +45,31 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Calculates next life generation
         /// </summary>
-        public CellStatus[,] NextGeneration()
+        public WorldInfo NextGeneration()
         {
+            WorldInfo worldInfo = null;
             if (GenerationNumber == 0)
             {
-                currentLifeGenerationGrid = FirstGeneration();
+                worldInfo = FirstGeneration();
+                currentLifeGenerationGrid = worldInfo.LifesGenerationGrid;
             }
             else
             {
-                currentLifeGenerationGrid = NextGeneration(currentLifeGenerationGrid);
+                worldInfo = NextGeneration(currentLifeGenerationGrid);
+                currentLifeGenerationGrid = worldInfo.LifesGenerationGrid;
             }
 
             GenerationNumber++;
-            return currentLifeGenerationGrid;
+            worldInfo.GenerationNumber = GenerationNumber;
+            return worldInfo;
         }
 
         /// <summary>
         /// Generates grid of first generation
         /// </summary>
-        private CellStatus[,] FirstGeneration()
+        private WorldInfo FirstGeneration()
         {
-            var grid = new CellStatus[gridSize.Rows, gridSize.Columns];
+            var firstGeneration = new CellStatus[gridSize.Rows, gridSize.Columns];
             int aliveCells = 0;
 
             // Randomly initialize grid
@@ -73,9 +77,9 @@ namespace GameOfLife.Logic
             {
                 for (var column = 0; column < gridSize.Columns; column++)
                 {
-                    grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
+                    firstGeneration[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
 
-                    var cell = grid[row, column];
+                    var cell = firstGeneration[row, column];
 
                     if (cell == CellStatus.Alive)
                     {
@@ -83,17 +87,22 @@ namespace GameOfLife.Logic
                     }
                 }
             }
-
-            AliveCells = aliveCells;
-            return grid;
+            return new WorldInfo
+            {
+                Id = id,
+                AliveCells = aliveCells,
+                IsWorldAlive = aliveCells > 0,
+                LifesGenerationGrid = firstGeneration
+            };
         }
 
         /// <summary>
         /// Generates grid of next generation based on current generation
         /// </summary>
         /// <param name="lifeGenerationGrid">Used to specify life generation grid</param>
-        private CellStatus[,] NextGeneration(CellStatus[,] lifeGenerationGrid)
+        private WorldInfo NextGeneration(CellStatus[,] lifeGenerationGrid)
         {
+            var isWorldAlive = false;
             int aliveCells = 0;
             var nextGeneration = new CellStatus[gridSize.Rows, gridSize.Columns];
 
@@ -138,11 +147,21 @@ namespace GameOfLife.Logic
                     {
                         aliveCells++;
                     }
+
+                    if(currentCell!=nextGeneration[row, column])
+                    {
+                        isWorldAlive = true;    
+                    }
                 }
             }
 
-            AliveCells = aliveCells;
-            return nextGeneration;
+            return new WorldInfo
+            {
+                Id = id,
+                AliveCells = aliveCells,
+                IsWorldAlive = isWorldAlive,
+                LifesGenerationGrid = nextGeneration
+            };
         }
     }
 }
