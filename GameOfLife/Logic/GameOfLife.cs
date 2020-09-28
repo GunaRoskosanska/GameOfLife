@@ -2,6 +2,7 @@
 using GameOfLife.View;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -11,10 +12,12 @@ namespace GameOfLife.Logic
     /// </summary>
     public class GameOfLife
     {
+        private const int CountOfWorldsToShow = 8;
         private GameSaver gameSaver;
         private GamePresenter gamePresenter;
         private Timer timer;
         private List<World> worlds;
+        private int[] worldsToPrint;
 
         public bool IsRunning { get; private set; }
 
@@ -76,8 +79,11 @@ namespace GameOfLife.Logic
         /// </summary>
         public void CreateNewGame()
         {
-            var countOfWorlds = gamePresenter.RequestCountOfWorlds();
+            int countOfWorlds = gamePresenter.RequestCountOfWorlds();
             WorldSize worldSize = gamePresenter.RequestWorldSize();
+            
+            int countToRequest = countOfWorlds > CountOfWorldsToShow ? CountOfWorldsToShow : countOfWorlds;
+            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest);
 
             for(int i = 1; i <= countOfWorlds; i++)
             {
@@ -122,7 +128,11 @@ namespace GameOfLife.Logic
             foreach (var world in worlds)
             {
                 var wordlInformation = world.NextGeneration();
-                gamePresenter.Print(wordlInformation);
+
+                if(worldsToPrint.Contains(world.Id))
+                {
+                    gamePresenter.Print(wordlInformation);
+                }
             }
 
             //gamePresenter.Print(gameInfo);

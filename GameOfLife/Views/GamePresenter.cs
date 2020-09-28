@@ -11,7 +11,6 @@ namespace GameOfLife.View
     {
         private const int MinValue = 1;
         private const int MaxValue = 1000;
-        private int countOfWorld;
         private const string IncorrectEnteredNumberAnnouncement = "Please enter positive numbers only from 1 to 1000. ";
 
         /// <summary>
@@ -105,31 +104,31 @@ namespace GameOfLife.View
         /// <summary>
         /// Requests to enter numbers of worlds (games) to show on console (up to 8 worlds)
         /// </summary>
-        public int RequestNumberOfWorldToShow()
+        public int[] RequestNumbersOfWorldToShow(int numberOfWorlds)
         {
             //Console.Write("Enter the numbers of the worlds you want to see (max 8 worlds, numbers sepatare by space): ");
             //int[] numberOfWorld = Array.ConvertAll(Console.ReadLine().Split(' '), (item) => Convert.ToInt32(item));
 
-            Console.Write("How many worlds You want to see (max 8)? ");
+            Console.Write($"How many worlds You want to see (max {numberOfWorlds})? ");
             int countOfWorldsToShow = int.Parse(Console.ReadLine());
+
+            while (countOfWorldsToShow > numberOfWorlds || countOfWorldsToShow < 1)
+            {
+                Console.Write($"Please enter positive numbers only from 1 to {numberOfWorlds}.");
+                countOfWorldsToShow = int.Parse(Console.ReadLine());
+            }
 
             int[] numbersOfWorlds = new int[countOfWorldsToShow];
 
-            if(countOfWorldsToShow > 8 || countOfWorldsToShow < 1)
-            {
-                Console.Write("Please enter positive numbers only from 1 to 8.");
-                RequestNumberOfWorldToShow();
-            }            
-            if(countOfWorldsToShow <= 8 && countOfWorldsToShow <= countOfWorld)
-            {
-                for(int i = 0; i < countOfWorldsToShow; i++)
-                {
-                    Console.Write("Enter number of the world " + i+1 + ": ");
-                    numbersOfWorlds[i] = int.Parse(Console.ReadLine());
-                }
+            Console.WriteLine("Every world has its own number starting from 1.");
+
+            for (int i = 0; i < countOfWorldsToShow; i++)
+            { 
+                Console.Write("Enter number of the world " + i + 1 + ": ");
+                numbersOfWorlds[i] = int.Parse(Console.ReadLine());
             }
 
-            return numbersOfWorlds; // ????
+            return numbersOfWorlds;
         }
 
         // Shows game options
@@ -150,14 +149,7 @@ namespace GameOfLife.View
         public void Print(WorldInfo worldInfo)
         {
             var worldAliveStatus = worldInfo.IsWorldAlive ? "Alive" : "Dead";
-
-            foreach(int numberOfWorlds in numbersOfWorlds)
-            {
-                if(numberOfWorlds == worldInfo.Id) // ???
-                {
-                    Console.WriteLine($"World ID: {worldInfo.Id,4} | Generation : {worldInfo.GenerationNumber,4} | Lives: {worldInfo.AliveCells,4} | {worldAliveStatus}");
-                }
-            }
+            Console.WriteLine($"World ID: {worldInfo.Id,4} | Generation : {worldInfo.GenerationNumber,4} | Lives: {worldInfo.AliveCells,4} | {worldAliveStatus}");
 
             return;
             var cellStatuses = worldInfo.LifesGenerationGrid;
