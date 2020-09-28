@@ -76,7 +76,7 @@ namespace GameOfLife.Logic
         /// </summary>
         public void CreateNewGame()
         {
-            var countOfWorlds = gamePresenter.RequestNumberOfWorlds();
+            var countOfWorlds = gamePresenter.RequestCountOfWorlds();
             WorldSize worldSize = gamePresenter.RequestWorldSize();
 
             for(int i = 1; i <= countOfWorlds; i++)
