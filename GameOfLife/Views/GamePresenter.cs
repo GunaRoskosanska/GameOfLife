@@ -102,25 +102,25 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Requests to enter numbers of worlds (games) to show on console (up to 8 worlds)
-        /// </summary>
+        /// Requests to enter numbers of worlds (games) to be shown (up to 8 worlds)
+        /// </summary
         public int[] RequestNumbersOfWorldToShow(int numberOfWorlds)
         {
             //Console.Write("Enter the numbers of the worlds you want to see (max 8 worlds, numbers sepatare by space): ");
             //int[] numberOfWorld = Array.ConvertAll(Console.ReadLine().Split(' '), (item) => Convert.ToInt32(item));
 
             Console.Write($"How many worlds You want to see (max {numberOfWorlds})? ");
-            int countOfWorldsToShow = int.Parse(Console.ReadLine());
+            int.TryParse(Console.ReadLine(), out int countOfWorldsToShow);
 
             while (countOfWorldsToShow > numberOfWorlds || countOfWorldsToShow < 1)
             {
-                Console.Write($"Please enter positive numbers only from 1 to {numberOfWorlds}.");
-                countOfWorldsToShow = int.Parse(Console.ReadLine());
+                Console.Write($"Please enter positive numbers only from 1 to {numberOfWorlds}. ");
+                int.TryParse(Console.ReadLine(), out countOfWorldsToShow);
             }
 
             int[] numbersOfWorlds = new int[countOfWorldsToShow];
 
-            Console.WriteLine("Every world has its own number starting from 1.");
+            Console.WriteLine("Every world has its own number starting from 1. ");
 
             for (int i = 0; i < countOfWorldsToShow; i++)
             { 
