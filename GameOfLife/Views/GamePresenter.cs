@@ -1,5 +1,6 @@
 ﻿using GameOfLife.Models;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace GameOfLife.View
@@ -106,9 +107,6 @@ namespace GameOfLife.View
         /// </summary
         public int[] RequestNumbersOfWorldToShow(int numberOfWorlds)
         {
-            //Console.Write("Enter the numbers of the worlds you want to see (max 8 worlds, numbers sepatare by space): ");
-            //int[] numberOfWorld = Array.ConvertAll(Console.ReadLine().Split(' '), (item) => Convert.ToInt32(item));
-
             Console.Write($"How many worlds You want to see (max {numberOfWorlds})? ");
             int.TryParse(Console.ReadLine(), out int countOfWorldsToShow);
 
@@ -124,14 +122,14 @@ namespace GameOfLife.View
 
             for (int i = 0; i < countOfWorldsToShow; i++)
             { 
-                Console.Write("Enter number of the world " + i + 1 + ": ");
+                Console.Write("Enter number of the world " + $"{i+1}" + ": ");
                 numbersOfWorlds[i] = int.Parse(Console.ReadLine());
             }
 
             return numbersOfWorlds;
         }
 
-        // Shows game options
+        // Shows game`s options
         public void PrintGameMenu()
         {
             Console.Clear();
@@ -140,6 +138,51 @@ namespace GameOfLife.View
             Console.WriteLine("1 - Start New Game");
             Console.WriteLine("2 - Continue Previous Game");
             Console.WriteLine("3 - Exit");
+        }
+
+        /// <summary>
+        /// Shows game`s options after pause
+        /// </summary>
+        public void PrintGameSecondMenu()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Game menu:");
+            Console.WriteLine("1 - Start New Game");
+            Console.WriteLine("2 - Continue Previous Game");
+            Console.WriteLine("3 - Exit");
+            Console.WriteLine("4 - Save game");
+            Console.WriteLine("5 - Change selected games on the screen");
+        }
+
+        /// <summary>
+        /// Requests game`s options after pause (Ctrl+C)
+        /// </summary>
+        public GameOption RequestGamePauseOption()
+        {
+            while (true)
+            {
+                PrintGameSecondMenu();
+                var gameOption = Console.ReadLine();
+                switch (gameOption)
+                {
+                    case "1":
+                        return GameOption.NewGame;
+                    case "2":
+                        return GameOption.ContinuePreviousGame;
+                    case "3":
+                        return GameOption.Exit;
+                    case "4":
+                        Console.WriteLine("Game saved.");
+                        return GameOption.SaveGame;
+                    case "5":
+                        return GameOption.ChangeWorldsOnScreen;
+                    default:
+                        Console.WriteLine("Please choose one of the options above. Enter any key...");
+                        Console.ReadKey(false);
+                        break;
+                }
+            }
         }
 
         /// <summary>

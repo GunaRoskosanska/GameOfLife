@@ -54,27 +54,6 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Continues previous game
-        /// </summary>
-        public void ContinuePreviousGame()
-        {
-            WorldInfo gameInfo = gameSaver.Load();
-
-            if (gameInfo == null)
-            {
-                CreateNewGame();
-            }
-            else
-            {
-                //cellStatusGeneration = new WorldGenerator(gameInfo);
-                // To stop the game
-                gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-
-                StartGameTimer();
-            }
-        }
-
-        /// <summary>
         /// Creates new game
         /// </summary>
         public void CreateNewGame()
@@ -97,6 +76,59 @@ namespace GameOfLife.Logic
 
             StartGameTimer();
         }
+
+        /// <summary>
+        /// Continues previous game
+        /// </summary>
+        public void ContinuePreviousGame()
+        {
+            WorldInfo gameInfo = gameSaver.Load();
+
+            if (gameInfo == null)
+            {
+                CreateNewGame();
+            }
+            else
+            {
+                //cellStatusGeneration = new WorldGenerator(gameInfo);
+                // To stop the game
+                gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
+
+                StartGameTimer();
+            }
+        }
+
+        /// <summary>
+        /// Continues game after pause (Ctrl + C)
+        /// </summary>
+        public void ContinueGameAfterPause()
+        {
+            GameOption gameOption = gamePresenter.RequestGamePauseOption();
+
+            switch (gameOption)
+            {
+                case GameOption.NewGame:
+                    CreateNewGame();
+                    break;
+                case GameOption.ContinuePreviousGame:
+                    ContinuePreviousGame();
+                    break;
+                case GameOption.SaveGame:
+                   break;
+                case GameOption.ChangeWorldsOnScreen:
+                    ChangeWorldsOnScreen();
+                    break;
+                case GameOption.Exit:
+                    IsRunning = false;
+                    return;
+            }
+        }
+
+        public void ChangeWorldsOnScreen()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Handles cancel key press
         /// </summary>
@@ -105,7 +137,7 @@ namespace GameOfLife.Logic
             timer.Enabled = false;
             timer.Elapsed -= OnTimerElapsed;
             gamePresenter.CancelKeyPress -= GamePresenterCancelKeyPress;
-            StartNewGame();
+            ContinueGameAfterPause();
         }
 
         /// <summary>

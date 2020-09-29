@@ -14,6 +14,11 @@ namespace GameOfLife.Models
         /// </summary>
         public int Id { get; private set; }
 
+        /// <summary>
+        /// World constructor
+        /// </summary>
+        /// <param name="id">Number of the game from 1 to 1000</param>
+        /// <param name="worldSize">Size of World (measured by rows and columns)</param>
         public World(int id, WorldSize worldSize)
         {
             Id = id;

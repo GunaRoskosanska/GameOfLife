@@ -104,6 +104,7 @@ namespace GameOfLife.Logic
         {
             var isWorldAlive = false;
             int aliveCells = 0;
+            int aliveWorlds = 0;
             var nextGeneration = new CellStatus[gridSize.Rows, gridSize.Columns];
 
             // Loop through every cell
@@ -150,7 +151,8 @@ namespace GameOfLife.Logic
 
                     if(currentCell!=nextGeneration[row, column])
                     {
-                        isWorldAlive = true;    
+                        isWorldAlive = true;
+                        aliveWorlds++;
                     }
                 }
             }

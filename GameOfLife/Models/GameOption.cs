@@ -18,6 +18,16 @@
         /// <summary>
         /// Option of the game - exit game
         /// </summary>
-        Exit = 3
+        Exit = 3,
+
+        /// <summary>
+        /// Option of the game - save game
+        /// </summary>
+        SaveGame = 4,
+
+        /// <summary>
+        /// Option of the game - change what exact games will be iterating on screen
+        /// </summary>
+        ChangeWorldsOnScreen = 5
     }
 }
