@@ -1,6 +1,5 @@
 ﻿using GameOfLife.Models;
 using System;
-using System.Linq;
 using System.Text;
 
 namespace GameOfLife.View
@@ -34,12 +33,12 @@ namespace GameOfLife.View
         /// <summary>
         /// Requests to enter number of rows and columns for the game
         /// </summary>
-        public WorldSize RequestWorldSize()
+        public WorldSize RequestWorldSize(int minValue = 1, int maxValue = 100)
         {
-            Console.Write("Enter number of rows (from 1 to 1000): ");
+            Console.Write($"Enter number of rows (from {minValue} to {maxValue}): ");
             int rows = ReadNumber();
 
-            Console.Write("Enter number of columns (from 1 to 1000): ");
+            Console.Write($"Enter number of columns (from {minValue} to {maxValue}): ");
             var columns = ReadNumber();
 
             return new WorldSize
@@ -53,7 +52,7 @@ namespace GameOfLife.View
         /// Reviews entered values (if they are numbers from 1 to 1000)
         /// </summary>
         /// <returns></returns>
-        private static int ReadNumber()
+        private static int ReadNumber(int minValue = 1, int maxValue = 1000)
         {
             int.TryParse(Console.ReadLine(), out int count);
 
@@ -94,9 +93,9 @@ namespace GameOfLife.View
         /// <summary>
         /// Requests to enter number of worlds (games) to execure in parallel
         /// </summary>
-        public int RequestCountOfWorlds()
+        public int RequestCountOfWorlds(int minValue = 1, int maxValue = 1000)
         {
-            Console.Write("Enter number of worlds (from 1 to 1000): ");
+            Console.Write($"Enter number of worlds (from {minValue} to {maxValue}): ");
             int countOfWorld = ReadNumber();
 
             return countOfWorld;

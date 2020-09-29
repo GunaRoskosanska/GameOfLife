@@ -64,7 +64,7 @@ namespace GameOfLife.Logic
             int countToRequest = countOfWorlds > CountOfWorldsToShow ? CountOfWorldsToShow : countOfWorlds;
             worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest);
 
-            for(int i = 1; i <= countOfWorlds; i++)
+            for (int i = 1; i <= countOfWorlds; i++)
             {
                 var world = new World(i, worldSize);
 
@@ -161,7 +161,7 @@ namespace GameOfLife.Logic
             {
                 var wordlInformation = world.NextGeneration();
 
-                if(worldsToPrint.Contains(world.Id))
+                if (worldsToPrint.Contains(world.Id))
                 {
                     gamePresenter.Print(wordlInformation);
                 }
