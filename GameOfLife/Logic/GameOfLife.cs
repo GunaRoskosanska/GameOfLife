@@ -3,6 +3,7 @@ using GameOfLife.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -20,6 +21,11 @@ namespace GameOfLife.Logic
         private int[] worldsToPrint;
 
         public bool IsRunning { get; private set; }
+
+        /// <summary>
+        /// Returns total worls count
+        /// </summary>
+        public int WorldsCount { get { return worlds.Count; } }
 
         /// <summary>
         /// Game of life constructor
@@ -114,6 +120,7 @@ namespace GameOfLife.Logic
                     ContinuePreviousGame();
                     break;
                 case GameOption.SaveGame:
+                    gamePresenter.PrintGameSaved();
                    break;
                 case GameOption.ChangeWorldsOnScreen:
                     ChangeWorldsOnScreen();
@@ -123,10 +130,15 @@ namespace GameOfLife.Logic
                     return;
             }
         }
-
+        /// <summary>
+        /// Changes worlds on screen
+        /// </summary>
         public void ChangeWorldsOnScreen()
         {
-            throw new NotImplementedException();
+            int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
+            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest);
+            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
+            StartGameTimer();
         }
 
         /// <summary>

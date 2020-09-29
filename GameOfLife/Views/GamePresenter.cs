@@ -36,10 +36,10 @@ namespace GameOfLife.View
         public WorldSize RequestWorldSize(int minValue = 1, int maxValue = 100)
         {
             Console.Write($"Enter number of rows (from {minValue} to {maxValue}): ");
-            int rows = ReadNumber();
+            int rows = ReadNumber(minValue, maxValue);
 
             Console.Write($"Enter number of columns (from {minValue} to {maxValue}): ");
-            var columns = ReadNumber();
+            var columns = ReadNumber(minValue, maxValue);
 
             return new WorldSize
             {
@@ -52,11 +52,11 @@ namespace GameOfLife.View
         /// Reviews entered values (if they are numbers from 1 to 1000)
         /// </summary>
         /// <returns></returns>
-        private static int ReadNumber(int minValue = 1, int maxValue = 1000)
+        private static int ReadNumber(int minValue, int maxValue)
         {
             int.TryParse(Console.ReadLine(), out int count);
 
-            while (count < MinValue || count > MaxValue)
+            while (count < minValue || count > maxValue)
             {
                 Console.Write(IncorrectEnteredNumberAnnouncement);
                 int.TryParse(Console.ReadLine(), out count);
@@ -96,9 +96,14 @@ namespace GameOfLife.View
         public int RequestCountOfWorlds(int minValue = 1, int maxValue = 1000)
         {
             Console.Write($"Enter number of worlds (from {minValue} to {maxValue}): ");
-            int countOfWorld = ReadNumber();
+            int countOfWorld = ReadNumber(minValue, maxValue);
 
             return countOfWorld;
+        }
+
+        internal void PrintGameSaved()
+        {
+            Console.WriteLine("Game saved.");
         }
 
         /// <summary>
@@ -107,12 +112,12 @@ namespace GameOfLife.View
         public int[] RequestNumbersOfWorldToShow(int numberOfWorlds)
         {
             Console.Write($"How many worlds You want to see (max {numberOfWorlds})? ");
-            int.TryParse(Console.ReadLine(), out int countOfWorldsToShow);
+            int countOfWorldsToShow = ReadNumber(1, numberOfWorlds);
 
             while (countOfWorldsToShow > numberOfWorlds || countOfWorldsToShow < 1)
             {
                 Console.Write($"Please enter positive numbers only from 1 to {numberOfWorlds}. ");
-                int.TryParse(Console.ReadLine(), out countOfWorldsToShow);
+                countOfWorldsToShow = ReadNumber(1, numberOfWorlds);
             }
 
             int[] numbersOfWorlds = new int[countOfWorldsToShow];
@@ -122,7 +127,7 @@ namespace GameOfLife.View
             for (int i = 0; i < countOfWorldsToShow; i++)
             { 
                 Console.Write("Enter number of the world " + $"{i+1}" + ": ");
-                numbersOfWorlds[i] = int.Parse(Console.ReadLine());
+                numbersOfWorlds[i] = ReadNumber(1, numberOfWorlds);
             }
 
             return numbersOfWorlds;
@@ -151,7 +156,7 @@ namespace GameOfLife.View
             Console.WriteLine("2 - Continue Previous Game");
             Console.WriteLine("3 - Exit");
             Console.WriteLine("4 - Save game");
-            Console.WriteLine("5 - Change selected games on the screen");
+            Console.WriteLine("5 - Change selected worlds on the screen");
         }
 
         /// <summary>
@@ -172,7 +177,6 @@ namespace GameOfLife.View
                     case "3":
                         return GameOption.Exit;
                     case "4":
-                        Console.WriteLine("Game saved.");
                         return GameOption.SaveGame;
                     case "5":
                         return GameOption.ChangeWorldsOnScreen;
