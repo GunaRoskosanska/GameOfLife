@@ -68,7 +68,9 @@ namespace GameOfLife.Logic
             WorldSize worldSize = gamePresenter.RequestWorldSize();
             
             int countToRequest = countOfWorlds > CountOfWorldsToShow ? CountOfWorldsToShow : countOfWorlds;
-            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest);
+            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, countOfWorlds);
+
+            worlds = new List<World>();
 
             for (int i = 1; i <= countOfWorlds; i++)
             {
@@ -136,7 +138,7 @@ namespace GameOfLife.Logic
         public void ChangeWorldsOnScreen()
         {
             int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
-            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest);
+            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
             gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
             StartGameTimer();
         }
