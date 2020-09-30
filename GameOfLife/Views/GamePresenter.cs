@@ -1,5 +1,6 @@
 ﻿using GameOfLife.Models;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace GameOfLife.View
@@ -137,22 +138,25 @@ namespace GameOfLife.View
                 countOfWorldsToShow = ReadNumber(1, numberOfWorldsToShow);
             }
 
-            int[] numbersOfWorlds = new int[countOfWorldsToShow];
+            List<int> numbersOfWorlds = new List<int>();
 
             Console.WriteLine("Every world has its own number starting from 1. ");
 
             for (int i = 0; i < countOfWorldsToShow; i++)
             { 
                 Console.Write("Enter number of the world " + $"{i+1}" + ": ");
-                numbersOfWorlds[i] = ReadNumber(1, countOfWorlds);
-                // ja sads numurs jau tika ievadits, tad japarada pazinojumu un japieprasa ievadit citu nr
-                //if()
-                //{
-                //
-                //}
+                int numberOfWorld = ReadNumber(1, countOfWorlds);
+
+                while(numbersOfWorlds.Contains(numberOfWorld))
+                {
+                    Console.Write("This world is already selected. Please choose another one. ");
+                    numberOfWorld = ReadNumber(1, countOfWorlds);
+                }
+
+                numbersOfWorlds.Add(numberOfWorld);
             }
 
-            return numbersOfWorlds;
+            return numbersOfWorlds.ToArray();
         }
 
         /// <summary>

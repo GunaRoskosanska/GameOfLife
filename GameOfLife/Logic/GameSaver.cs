@@ -1,6 +1,7 @@
 ﻿using GameOfLife.Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace GameOfLife.Logic
@@ -25,7 +26,7 @@ namespace GameOfLife.Logic
         /// Saves the game
         /// </summary>
         /// <param name="gameInfo">Information about the game that has to be saved</param>
-        public void Save (WorldInfo gameInfo)
+        public void Save (List<WorldInfo> gameInfo)
         {
             try
             {

@@ -15,9 +15,14 @@ namespace GameOfLife.Models
         public int Id { get; private set; }
 
         /// <summary>
+        /// Information about world
+        /// </summary>
+        public WorldInfo Info { get; private set; }
+
+        /// <summary>
         /// World constructor
         /// </summary>
-        /// <param name="id">Number of the game from 1 to 1000</param>
+        /// <param name="id">Number of the game from 1 to maxValue</param>
         /// <param name="worldSize">Size of World (measured by rows and columns)</param>
         public World(int id, WorldSize worldSize)
         {
@@ -30,7 +35,8 @@ namespace GameOfLife.Models
         /// </summary>
         public WorldInfo NextGeneration()
         {
-            return worldGenerator.NextGeneration();
+            Info = worldGenerator.NextGeneration();
+            return Info;
         }
     }
 }

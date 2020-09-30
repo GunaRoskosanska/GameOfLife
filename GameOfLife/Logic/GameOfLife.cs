@@ -123,7 +123,8 @@ namespace GameOfLife.Logic
                     break;
                 case GameOption.SaveGame:
                     gamePresenter.PrintGameSaved();
-                   break;
+                    gameSaver.Save(worlds.Select(world=>world.Info).ToList());
+                    break;
                 case GameOption.ChangeWorldsOnScreen:
                     ChangeWorldsOnScreen();
                     break;
@@ -182,7 +183,6 @@ namespace GameOfLife.Logic
             }
 
             //gamePresenter.Print(gameInfo);
-            //gameSaver.Save(gameInfo);
         }
     }
 }
