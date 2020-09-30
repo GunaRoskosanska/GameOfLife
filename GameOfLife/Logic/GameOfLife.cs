@@ -23,7 +23,7 @@ namespace GameOfLife.Logic
         public bool IsRunning { get; private set; }
 
         /// <summary>
-        /// Returns total worls count
+        /// Returns total worlds count
         /// </summary>
         public int WorldsCount { get { return worlds.Count; } }
 
@@ -86,7 +86,7 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Continues previous game
+        /// Continues previous game after pause
         /// </summary>
         public void ContinuePreviousGame()
         {
@@ -107,7 +107,7 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Continues game after pause (Ctrl + C)
+        /// Continue game after pause (Ctrl + C) depending of the choice made
         /// </summary>
         public void ContinueGameAfterPause()
         {
@@ -133,7 +133,7 @@ namespace GameOfLife.Logic
             }
         }
         /// <summary>
-        /// Changes worlds on screen
+        /// Changes worlds on the screen
         /// </summary>
         public void ChangeWorldsOnScreen()
         {

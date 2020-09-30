@@ -9,17 +9,19 @@ namespace GameOfLife.View
     /// </summary>
     public class GamePresenter
     {
-        //private const int MinValue = 1;
-        //private const int MaxValue = 1000;
-
+        /// <summary>
+        /// Shows this message when entered values are incorrect
+        /// </summary>
+        /// <param name="minValue">Minimal value</param>
+        /// <param name="maxValue">Maximum value</param>
+        /// <returns></returns>
         private string InvalidInputValidationMessage(int minValue, int maxValue)
         {
             return $"Please enter positive numbers only from {minValue} to {maxValue}. ";
         }
 
-
         /// <summary>
-        /// Occurs when Ctrl+C
+        /// Occurs when press Ctrl+C
         /// </summary>
         public event Action CancelKeyPress = delegate { };
 
@@ -54,8 +56,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Reviews entered values (if they are numbers from 1 to maxValue)
+        /// Reviews entered values (if they are numbers from 1 (minimal value) to maximum value)
         /// </summary>
+        /// <param name="minValue">Minimal value</param>
+        /// <param name="maxValue">Maximum value</param>
         /// <returns></returns>
         private int ReadNumber(int minValue, int maxValue)
         {
@@ -98,14 +102,20 @@ namespace GameOfLife.View
         /// <summary>
         /// Requests to enter number of worlds (games) to execure in parallel
         /// </summary>
+        /// <param name="minValue">Minimal value</param>
+        /// <param name="maxValue">Maximum value</param>
+        /// <returns></returns>
         public int RequestCountOfWorlds(int minValue = 1, int maxValue = 1000)
         {
             Console.Write($"Enter number of worlds (from {minValue} to {maxValue}): ");
-            int countOfWorld = ReadNumber(minValue, maxValue);
+            int countOfWorlds = ReadNumber(minValue, maxValue);
 
-            return countOfWorld;
+            return countOfWorlds;
         }
 
+        /// <summary>
+        /// Shows message that game has saved
+        /// </summary>
         internal void PrintGameSaved()
         {
             Console.WriteLine("Game saved.");
@@ -113,7 +123,9 @@ namespace GameOfLife.View
 
         /// <summary>
         /// Requests to enter numbers of worlds (games) to be shown (up to 8 worlds)
-        /// </summary
+        /// </summary>
+        /// <param name="numberOfWorldsToShow">8 or less (if total number of worlds is less than 8)</param>
+        /// <param name="countOfWorlds">Count of all worlds in the game</param>
         public int[] RequestNumbersOfWorldToShow(int numberOfWorldsToShow, int countOfWorlds)
         {
             Console.Write($"How many worlds You want to see (max {numberOfWorldsToShow})? ");
@@ -133,12 +145,19 @@ namespace GameOfLife.View
             { 
                 Console.Write("Enter number of the world " + $"{i+1}" + ": ");
                 numbersOfWorlds[i] = ReadNumber(1, countOfWorlds);
+                // ja sads numurs jau tika ievadits, tad japarada pazinojumu un japieprasa ievadit citu nr
+                //if()
+                //{
+                //
+                //}
             }
 
             return numbersOfWorlds;
         }
 
-        // Shows game`s options
+        /// <summary>
+        /// Shows game`s options at the beginning
+        /// </summary>
         public void PrintGameMenu()
         {
             Console.Clear();
