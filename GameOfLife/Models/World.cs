@@ -10,11 +10,6 @@ namespace GameOfLife.Models
         private WorldGenerator worldGenerator;
         
         /// <summary>
-        /// Uniqe world identificator
-        /// </summary>
-        public int Id { get; private set; }
-
-        /// <summary>
         /// Information about world
         /// </summary>
         public WorldInfo Info { get; private set; }
@@ -26,8 +21,11 @@ namespace GameOfLife.Models
         /// <param name="worldSize">Size of World (measured by rows and columns)</param>
         public World(int id, WorldSize worldSize)
         {
-            Id = id;
-            worldGenerator = new WorldGenerator(Id, worldSize);
+            worldGenerator = new WorldGenerator(id, worldSize);
+            Info = new WorldInfo
+            {
+                Id = id
+            };
         }
 
         /// <summary>

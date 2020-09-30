@@ -65,7 +65,7 @@ namespace GameOfLife.Logic
         public void CreateNewGame()
         {
             int countOfWorlds = gamePresenter.RequestCountOfWorlds();
-            WorldSize worldSize = gamePresenter.RequestWorldSize();
+            WorldSize worldSize = gamePresenter.RequestWorldSize(10, 20);
             
             int countToRequest = countOfWorlds > CountOfWorldsToShow ? CountOfWorldsToShow : countOfWorlds;
             worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, countOfWorlds);
@@ -171,18 +171,25 @@ namespace GameOfLife.Logic
         /// </summary>
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            Console.Clear();
+            var snapshot = new GameSnapshot
+            {
+                TotalWorlds = worlds.Count,
+            };
+
             foreach (var world in worlds)
             {
                 var wordlInformation = world.NextGeneration();
 
-                if (worldsToPrint.Contains(world.Id))
+                snapshot.TotalAliveWorlds += wordlInformation.IsWorldAlive ? 1 : 0;
+                snapshot.TotalLifes += wordlInformation.AliveCells;
+
+                if (worldsToPrint.Contains(world.Info.Id))
                 {
-                    gamePresenter.Print(wordlInformation);
+                    snapshot.Worlds.Add(world);
                 }
             }
 
-            //gamePresenter.Print(gameInfo);
+            gamePresenter.Print(snapshot);
         }
     }
 }

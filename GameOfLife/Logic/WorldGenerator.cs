@@ -47,7 +47,7 @@ namespace GameOfLife.Logic
         /// </summary>
         public WorldInfo NextGeneration()
         {
-            WorldInfo worldInfo = null;
+            WorldInfo worldInfo;
             if (GenerationNumber == 0)
             {
                 worldInfo = FirstGeneration();
@@ -61,6 +61,7 @@ namespace GameOfLife.Logic
 
             GenerationNumber++;
             worldInfo.GenerationNumber = GenerationNumber;
+            worldInfo.Size = gridSize;
             return worldInfo;
         }
 

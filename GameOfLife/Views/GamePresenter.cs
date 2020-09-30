@@ -1,6 +1,8 @@
 ﻿using GameOfLife.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace GameOfLife.View
@@ -143,11 +145,11 @@ namespace GameOfLife.View
             Console.WriteLine("Every world has its own number starting from 1. ");
 
             for (int i = 0; i < countOfWorldsToShow; i++)
-            { 
-                Console.Write("Enter number of the world " + $"{i+1}" + ": ");
+            {
+                Console.Write("Enter number of the world " + $"{i + 1}" + ": ");
                 int numberOfWorld = ReadNumber(1, countOfWorlds);
 
-                while(numbersOfWorlds.Contains(numberOfWorld))
+                while (numbersOfWorlds.Contains(numberOfWorld))
                 {
                     Console.Write("This world is already selected. Please choose another one. ");
                     numberOfWorld = ReadNumber(1, countOfWorlds);
@@ -170,6 +172,47 @@ namespace GameOfLife.View
             Console.WriteLine("1 - Start New Game");
             Console.WriteLine("2 - Continue Previous Game");
             Console.WriteLine("3 - Exit");
+        }
+
+        public void Print(GameSnapshot snapshot)
+        {
+            Console.Clear();
+            
+            var worldSize = snapshot.Worlds.First().Info.Size;
+
+            var strBuilder = new StringBuilder();
+            foreach (var world in snapshot.Worlds)
+            {
+                var deadOrAlive = world.Info.IsWorldAlive ? "Alive" : "Dead";
+                strBuilder.Append($"ID:{world.Info.Id} G:{world.Info.GenerationNumber} L:{world.Info.AliveCells} {deadOrAlive}".PadRight(30));
+            }
+            PrintLine(strBuilder.ToString(), ConsoleColor.White);
+
+            strBuilder = new StringBuilder();
+            for (int i = 0; i < worldSize.Rows; i++)
+            {
+                foreach (var world in snapshot.Worlds)
+                {
+                    var lineBuilder = new StringBuilder();
+                    for (int j = 0; j < worldSize.Columns; j++)
+                    {
+                        if (world.Info.LifesGenerationGrid[i, j] == CellStatus.Alive)
+                            lineBuilder.Append("·");
+                        else
+                            lineBuilder.Append(" ");
+                    }
+                    strBuilder.Append(lineBuilder.ToString().PadRight(30));
+                }
+                strBuilder.AppendLine();
+            }
+            PrintLine(strBuilder.ToString(), ConsoleColor.Green);
+
+            PrintGameStatus(snapshot);
+        }
+
+        private void PrintGameStatus(GameSnapshot snapshot)
+        {
+            PrintLine($"Total Worlds: {snapshot.TotalWorlds, 4} Alive Worlds: {snapshot.TotalAliveWorlds,4} Lifes: {snapshot.TotalLifes,3}", ConsoleColor.White);
         }
 
         /// <summary>
@@ -253,6 +296,14 @@ namespace GameOfLife.View
             Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(0, 2);
             Console.Write(stringBuilder.ToString());
+        }
+
+        public void PrintLine(string text, ConsoleColor color)
+        {
+            var prevColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = prevColor;
         }
     }
 }
