@@ -29,7 +29,7 @@ namespace GameOfLife.Models
         }
 
         /// <summary>
-        /// Generates new world's generation
+        /// Generates next generation of the world
         /// </summary>
         public WorldInfo NextGeneration()
         {

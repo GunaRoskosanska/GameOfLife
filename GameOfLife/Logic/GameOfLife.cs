@@ -3,7 +3,6 @@ using GameOfLife.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -94,6 +93,7 @@ namespace GameOfLife.Logic
 
             if (gameInfo == null)
             {
+                gamePresenter.PrintNoSavedGame();
                 CreateNewGame();
             }
             else
@@ -133,6 +133,7 @@ namespace GameOfLife.Logic
                     return;
             }
         }
+
         /// <summary>
         /// Changes worlds on the screen
         /// </summary>

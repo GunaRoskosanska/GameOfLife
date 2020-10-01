@@ -98,7 +98,7 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Generates grid of next generation based on current generation
+        /// Generates grid for next generation based on current generation
         /// </summary>
         /// <param name="lifeGenerationGrid">Used to specify life generation grid</param>
         private WorldInfo NextGeneration(CellStatus[,] lifeGenerationGrid)

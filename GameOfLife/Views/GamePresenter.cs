@@ -59,7 +59,7 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Reviews entered values (if they are numbers from 1 (minimal value) to maximum value)
+        /// Reviews entered values (if they are numbers from minimal value to maximum value)
         /// </summary>
         /// <param name="minValue">Minimal value</param>
         /// <param name="maxValue">Maximum value</param>
@@ -125,6 +125,14 @@ namespace GameOfLife.View
         }
 
         /// <summary>
+        /// Shows message if there are no previously saved games
+        /// </summary>
+        internal void PrintNoSavedGame()
+        {
+            Console.WriteLine("There are no saved games. Please start new game.");
+        }
+
+        /// <summary>
         /// Requests to enter numbers of worlds (games) to be shown (up to 8 worlds)
         /// </summary>
         /// <param name="numberOfWorldsToShow">8 or less (if total number of worlds is less than 8)</param>
@@ -174,6 +182,10 @@ namespace GameOfLife.View
             Console.WriteLine("3 - Exit");
         }
 
+        /// <summary>
+        /// Shows on screen information about the game
+        /// </summary>
+        /// <param name="snapshot">Game information that has to be shown on screen</param>
         public void Print(GameSnapshot snapshot)
         {
             Console.Clear();
@@ -213,6 +225,7 @@ namespace GameOfLife.View
         private void PrintGameStatus(GameSnapshot snapshot)
         {
             PrintLine($"Total Worlds: {snapshot.TotalWorlds, 4} Alive Worlds: {snapshot.TotalAliveWorlds,4} Lifes: {snapshot.TotalLifes,3}", ConsoleColor.White);
+            Console.WriteLine($"You can stop the application by pressing Ctrl+C.");
         }
 
         /// <summary>
@@ -269,33 +282,6 @@ namespace GameOfLife.View
             Console.WriteLine($"World ID: {worldInfo.Id,4} | Generation : {worldInfo.GenerationNumber,4} | Lives: {worldInfo.AliveCells,4} | {worldAliveStatus}");
 
             return;
-            var cellStatuses = worldInfo.LifesGenerationGrid;
-            int aliveCells = worldInfo.AliveCells;
-            int generationNumber = worldInfo.GenerationNumber;
-
-            int rows = cellStatuses.GetUpperBound(0) + 1;
-            int columns = cellStatuses.Length / rows;
-
-            var stringBuilder = new StringBuilder();
-
-            for (var row = 0; row < rows; row++)
-            {
-                for (var column = 0; column < columns; column++)
-                {
-                    var cell = cellStatuses[row, column];
-                    stringBuilder.Append(cell == CellStatus.Alive ? "@" : " ");
-                }
-                stringBuilder.AppendLine();
-            }
-
-            Console.Clear();
-            Console.CursorVisible = false;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Generation #{generationNumber} | Count of live cells: {aliveCells}");
-            Console.WriteLine($"You can stop the application by pressing Ctrl+C.");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(0, 2);
-            Console.Write(stringBuilder.ToString());
         }
 
         public void PrintLine(string text, ConsoleColor color)
