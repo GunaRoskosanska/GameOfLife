@@ -26,13 +26,13 @@ namespace GameOfLife.Logic
         /// Saves the game
         /// </summary>
         /// <param name="gameInfo">Information about the game that has to be saved</param>
-        public void Save (List<WorldInfo> gameInfo)
+        public void Save (GameData gameData)
         {
             try
             {
                 EnsureDirectory();
-                string gameInfoJsonData = JsonConvert.SerializeObject(gameInfo);
-                File.WriteAllText(fileName, gameInfoJsonData);
+                string serializedGameData = JsonConvert.SerializeObject(gameData);
+                File.WriteAllText(fileName, serializedGameData);
             }
             catch (Exception e)
             {
@@ -56,12 +56,12 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Shows previously saved information
         /// </summary>
-        public WorldInfo Load()
+        public GameData Load()
         {
             try
             {
                 string jsonInformation = File.ReadAllText(fileName);
-                var gameInfo = JsonConvert.DeserializeObject<WorldInfo>(jsonInformation);
+                var gameInfo = JsonConvert.DeserializeObject<GameData>(jsonInformation);
                 return gameInfo;
             }
             catch (Exception e)
@@ -69,6 +69,6 @@ namespace GameOfLife.Logic
                 Console.WriteLine(e.Message + " Please start a new game.");
                 return null;
             }
-        } 
+        }
     }
 }

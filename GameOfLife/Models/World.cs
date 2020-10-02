@@ -8,7 +8,7 @@ namespace GameOfLife.Models
     public class World
     {
         private WorldGenerator worldGenerator;
-        
+
         /// <summary>
         /// Information about world
         /// </summary>
@@ -26,6 +26,12 @@ namespace GameOfLife.Models
             {
                 Id = id
             };
+        }
+
+        public World(WorldInfo worldInfo)
+        {
+            worldGenerator = new WorldGenerator(worldInfo);
+            Info = worldInfo;
         }
 
         /// <summary>

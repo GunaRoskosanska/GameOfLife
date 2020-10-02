@@ -30,6 +30,7 @@ namespace GameOfLife.Logic
         /// <param name="gameInfo">Game information</param>
         public WorldGenerator(WorldInfo gameInfo)
         {
+            this.id = gameInfo.Id;
             this.GenerationNumber = gameInfo.GenerationNumber;
             this.currentLifeGenerationGrid = gameInfo.LifesGenerationGrid;
 

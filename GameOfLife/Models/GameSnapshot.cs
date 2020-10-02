@@ -13,7 +13,7 @@ namespace GameOfLife.Models
         /// </summary>
         public GameSnapshot()
         {
-            Worlds = new List<World>();
+            WorldsToPrint = new List<World>();
         }
 
         /// <summary>
@@ -34,6 +34,7 @@ namespace GameOfLife.Models
         /// <summary>
         /// List of all worlds
         /// </summary>
-        public List<World> Worlds { get; set; }
+        public List<World> WorldsToPrint { get; set; }
+        public List<World> Worlds { get; internal set; }
     }
 }

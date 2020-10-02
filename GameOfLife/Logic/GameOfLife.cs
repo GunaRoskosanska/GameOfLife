@@ -1,6 +1,5 @@
 ﻿using GameOfLife.Models;
 using GameOfLife.View;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -17,7 +16,7 @@ namespace GameOfLife.Logic
         private GamePresenter gamePresenter;
         private Timer timer;
         private List<World> worlds;
-        private int[] worldsToPrint;
+        private List<World> worldsToPrint;
 
         public bool IsRunning { get; private set; }
 
@@ -32,6 +31,7 @@ namespace GameOfLife.Logic
         public GameOfLife()
         {
             worlds = new List<World>();
+            worldsToPrint = new List<World>();
             gamePresenter = new GamePresenter();
             gameSaver = new GameSaver("C:\\GameOfLife\\data.json");
             IsRunning = true;
@@ -42,20 +42,7 @@ namespace GameOfLife.Logic
         /// </summary>
         public void StartNewGame()
         {
-            GameOption gameOption = gamePresenter.RequestGameOption();
-
-            switch (gameOption)
-            {
-                case GameOption.NewGame:
-                    CreateNewGame();
-                    break;
-                case GameOption.ContinuePreviousGame:
-                    ContinuePreviousGame();
-                    break;
-                case GameOption.Exit:
-                    IsRunning = false;
-                    return;
-            }
+            OpenMenu();
         }
 
         /// <summary>
@@ -65,19 +52,18 @@ namespace GameOfLife.Logic
         {
             int countOfWorlds = gamePresenter.RequestCountOfWorlds();
             WorldSize worldSize = gamePresenter.RequestWorldSize(10, 20);
-            
-            int countToRequest = countOfWorlds > CountOfWorldsToShow ? CountOfWorldsToShow : countOfWorlds;
-            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, countOfWorlds);
-
             worlds = new List<World>();
-
             for (int i = 1; i <= countOfWorlds; i++)
             {
                 var world = new World(i, worldSize);
 
                 worlds.Add(world);
             }
-            
+
+            int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
+            var numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
+            worldsToPrint = numbersOfworldsToPrint.Select(x => worlds[x-1]).ToList();
+
             // To stop the game
             gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
 
@@ -87,18 +73,30 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Continues previous game after pause
         /// </summary>
-        public void ContinuePreviousGame()
+        public void ContinueGame()
         {
-            WorldInfo gameInfo = gameSaver.Load();
+            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
+            StartGameTimer();
+        }
 
-            if (gameInfo == null)
+        /// <summary>
+        /// Continues previous saved game after pause
+        /// </summary>
+        public void LoadSavedGame()
+        {
+            GameData gameData = gameSaver.Load();
+
+            if (gameData == null)
             {
                 gamePresenter.PrintNoSavedGame();
                 CreateNewGame();
             }
             else
             {
-                //cellStatusGeneration = new WorldGenerator(gameInfo);
+
+                worlds = gameData.Worlds.Select(x => new World(x)).ToList();
+                worldsToPrint = gameData.WorldsToPrint.Select(x => worlds[x-1]).ToList();
+
                 // To stop the game
                 gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
 
@@ -106,10 +104,28 @@ namespace GameOfLife.Logic
             }
         }
 
+        public void OpenMenu()
+        {
+            GameOption gameOption = gamePresenter.RequestGameOption();
+
+            switch (gameOption)
+            {
+                case GameOption.NewGame:
+                    CreateNewGame();
+                    break;
+                case GameOption.ContinuePreviousGame:
+                    LoadSavedGame();
+                    break;
+                case GameOption.Exit:
+                    IsRunning = false;
+                    return;
+            }
+        }
+
         /// <summary>
         /// Continue game after pause (Ctrl + C) depending of the choice made
         /// </summary>
-        public void ContinueGameAfterPause()
+        public void OpenExtendedMenu()
         {
             GameOption gameOption = gamePresenter.RequestGamePauseOption();
 
@@ -119,11 +135,11 @@ namespace GameOfLife.Logic
                     CreateNewGame();
                     break;
                 case GameOption.ContinuePreviousGame:
-                    ContinuePreviousGame();
+                    ContinueGame();
                     break;
                 case GameOption.SaveGame:
-                    gamePresenter.PrintGameSaved();
-                    gameSaver.Save(worlds.Select(world=>world.Info).ToList());
+                    SaveGame();
+                    OpenExtendedMenu();
                     break;
                 case GameOption.ChangeWorldsOnScreen:
                     ChangeWorldsOnScreen();
@@ -134,13 +150,27 @@ namespace GameOfLife.Logic
             }
         }
 
+        private void SaveGame()
+        {
+            var gameData = new GameData
+            {
+                Worlds = worlds.Select(x => x.Info).ToList(),
+                WorldsToPrint = worldsToPrint.Select(x => x.Info.Id).ToArray()
+            };
+
+            gameSaver.Save(gameData);
+            gamePresenter.PrintGameSaved();
+            System.Threading.Thread.Sleep(1000); //small delay for displaying information
+        }
+
         /// <summary>
         /// Changes worlds on the screen
         /// </summary>
         public void ChangeWorldsOnScreen()
         {
             int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
-            worldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
+            var numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
+            worldsToPrint = numbersOfworldsToPrint.Select(x => worlds[x-1]).ToList();
             gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
             StartGameTimer();
         }
@@ -153,7 +183,7 @@ namespace GameOfLife.Logic
             timer.Enabled = false;
             timer.Elapsed -= OnTimerElapsed;
             gamePresenter.CancelKeyPress -= GamePresenterCancelKeyPress;
-            ContinueGameAfterPause();
+            OpenExtendedMenu();
         }
 
         /// <summary>
@@ -175,6 +205,8 @@ namespace GameOfLife.Logic
             var snapshot = new GameSnapshot
             {
                 TotalWorlds = worlds.Count,
+                WorldsToPrint = worldsToPrint,
+                Worlds = worlds
             };
 
             foreach (var world in worlds)
@@ -183,11 +215,6 @@ namespace GameOfLife.Logic
 
                 snapshot.TotalAliveWorlds += wordlInformation.IsWorldAlive ? 1 : 0;
                 snapshot.TotalLifes += wordlInformation.AliveCells;
-
-                if (worldsToPrint.Contains(world.Info.Id))
-                {
-                    snapshot.Worlds.Add(world);
-                }
             }
 
             gamePresenter.Print(snapshot);

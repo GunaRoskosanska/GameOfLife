@@ -190,10 +190,10 @@ namespace GameOfLife.View
         {
             Console.Clear();
             
-            var worldSize = snapshot.Worlds.First().Info.Size;
+            var worldSize = snapshot.WorldsToPrint.First().Info.Size;
 
             var strBuilder = new StringBuilder();
-            foreach (var world in snapshot.Worlds)
+            foreach (var world in snapshot.WorldsToPrint)
             {
                 var deadOrAlive = world.Info.IsWorldAlive ? "Alive" : "Dead";
                 strBuilder.Append($"ID:{world.Info.Id} G:{world.Info.GenerationNumber} L:{world.Info.AliveCells} {deadOrAlive}".PadRight(30));
@@ -203,7 +203,7 @@ namespace GameOfLife.View
             strBuilder = new StringBuilder();
             for (int i = 0; i < worldSize.Rows; i++)
             {
-                foreach (var world in snapshot.Worlds)
+                foreach (var world in snapshot.WorldsToPrint)
                 {
                     var lineBuilder = new StringBuilder();
                     for (int j = 0; j < worldSize.Columns; j++)
