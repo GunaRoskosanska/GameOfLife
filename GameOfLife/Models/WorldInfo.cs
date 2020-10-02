@@ -1,7 +1,7 @@
 ﻿namespace GameOfLife.Models
 {
     /// <summary>
-    /// Information about the game
+    /// Information about the world
     /// </summary>
     public class WorldInfo
     {

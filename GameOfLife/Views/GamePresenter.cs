@@ -1,7 +1,6 @@
 ﻿using GameOfLife.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -43,6 +42,9 @@ namespace GameOfLife.View
         /// <summary>
         /// Requests to enter number of rows and columns for the game
         /// </summary>
+        /// <param name="minValue">Minimal value</param>
+        /// <param name="maxValue">Maximum value</param>
+        /// <returns></returns>
         public WorldSize RequestWorldSize(int minValue = 1, int maxValue = 100)
         {
             Console.Write($"Enter number of rows (from {minValue} to {maxValue}): ");
@@ -225,7 +227,7 @@ namespace GameOfLife.View
         /// <summary>
         /// Shows information about the game data while generating worlds
         /// </summary>
-        /// <param name="snapshot"></param>
+        /// <param name="snapshot">Information that has to be shown</param>
         private void PrintGameStatus(GameSnapshot snapshot)
         {
             PrintLine($"Total Worlds: {snapshot.TotalWorlds, 4} Alive Worlds: {snapshot.TotalAliveWorlds,4} Lifes: {snapshot.TotalLifes,3}", ConsoleColor.White);

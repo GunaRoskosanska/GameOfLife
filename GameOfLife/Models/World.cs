@@ -28,6 +28,10 @@ namespace GameOfLife.Models
             };
         }
 
+        /// <summary>
+        /// World constructor
+        /// </summary>
+        /// <param name="worldInfo">Information about the world</param>
         public World(WorldInfo worldInfo)
         {
             worldGenerator = new WorldGenerator(worldInfo);

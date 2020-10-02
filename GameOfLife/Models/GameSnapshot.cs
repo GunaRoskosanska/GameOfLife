@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace GameOfLife.Models
 {
@@ -32,9 +31,13 @@ namespace GameOfLife.Models
         public int TotalWorlds { get; set; }
 
         /// <summary>
-        /// List of all worlds
+        /// List of worlds that have to be shown on screen
         /// </summary>
         public List<World> WorldsToPrint { get; set; }
+
+        /// <summary>
+        /// List of all worlds
+        /// </summary>
         public List<World> Worlds { get; internal set; }
     }
 }
