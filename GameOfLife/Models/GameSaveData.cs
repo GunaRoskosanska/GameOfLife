@@ -5,7 +5,7 @@ namespace GameOfLife.Models
     /// <summary>
     /// Information about the game (for save)
     /// </summary>
-    public class GameData
+    public class GameSaveData
     {
         /// <summary>
         /// Information about all the worlds

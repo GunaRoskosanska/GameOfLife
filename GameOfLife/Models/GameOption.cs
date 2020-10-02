@@ -1,7 +1,7 @@
 ﻿namespace GameOfLife.Models
 {
     /// <summary>
-    /// There are 3 game options
+    /// There are 5 game options
     /// </summary>
     public enum GameOption
     {

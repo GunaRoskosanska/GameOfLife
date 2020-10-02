@@ -9,7 +9,7 @@ namespace GameOfLife
         static void Main(string[] args)
         {
             var game = new Logic.GameOfLife();
-            game.StartNewGame();
+            game.OpenMenu();
 
             while (game.IsRunning)
             {

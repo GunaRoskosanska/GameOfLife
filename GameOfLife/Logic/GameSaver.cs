@@ -6,14 +6,14 @@ using System.IO;
 namespace GameOfLife.Logic
 {
     /// <summary>
-    /// Saves the game
+    /// Saves the game ???
     /// </summary>
     public class GameSaver
     {
         private string fileName;
 
         /// <summary>
-        /// Shows where to save the game
+        /// Klases komentars :)
         /// </summary>
         /// <param name="fileName">Name of the file where to save the game</param>
         public GameSaver(string fileName)
@@ -25,7 +25,7 @@ namespace GameOfLife.Logic
         /// Saves the game
         /// </summary>
         /// <param name="gameInfo">Information about the game that has to be saved</param>
-        public void Save (GameData gameData)
+        public void Save (GameSaveData gameData)
         {
             try
             {
@@ -55,12 +55,12 @@ namespace GameOfLife.Logic
         /// <summary>
         /// Shows previously saved information
         /// </summary>
-        public GameData Load()
+        public GameSaveData Load()
         {
             try
             {
                 string jsonInformation = File.ReadAllText(fileName);
-                var gameInfo = JsonConvert.DeserializeObject<GameData>(jsonInformation);
+                var gameInfo = JsonConvert.DeserializeObject<GameSaveData>(jsonInformation);
                 return gameInfo;
             }
             catch (Exception e)

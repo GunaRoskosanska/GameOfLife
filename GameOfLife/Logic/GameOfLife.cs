@@ -26,7 +26,7 @@ namespace GameOfLife.Logic
         public int WorldsCount { get { return worlds.Count; } }
 
         /// <summary>
-        /// Game of life constructor
+        /// Game of life main logic part
         /// </summary>
         public GameOfLife()
         {
@@ -35,14 +35,6 @@ namespace GameOfLife.Logic
             gamePresenter = new GamePresenter();
             gameSaver = new GameSaver("C:\\GameOfLife\\data.json");
             IsRunning = true;
-        }
-
-        /// <summary>
-        /// Starts the game
-        /// </summary>
-        public void StartNewGame()
-        {
-            OpenMenu();
         }
 
         /// <summary>
@@ -61,7 +53,7 @@ namespace GameOfLife.Logic
             }
 
             int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
-            var numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
+            int[] numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
             worldsToPrint = numbersOfworldsToPrint.Select(x => worlds[x-1]).ToList();
 
             // To stop the game
@@ -84,7 +76,7 @@ namespace GameOfLife.Logic
         /// </summary>
         public void LoadSavedGame()
         {
-            GameData gameData = gameSaver.Load();
+            GameSaveData gameData = gameSaver.Load();
 
             if (gameData == null)
             {
@@ -126,7 +118,7 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Continues game after pause (Ctrl + C) depending of the choice made
+        /// Opens the menu and continues game after pause (Ctrl + C) depending of the choice made
         /// </summary>
         public void OpenExtendedMenu()
         {
@@ -158,7 +150,7 @@ namespace GameOfLife.Logic
         /// </summary>
         private void SaveGame()
         {
-            var gameData = new GameData
+            var gameData = new GameSaveData
             {
                 Worlds = worlds.Select(x => x.Info).ToList(),
                 WorldsToPrint = worldsToPrint.Select(x => x.Info.Id).ToArray()

@@ -23,7 +23,7 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Occurs when press Ctrl+C
+        /// Method to be invoked when press Ctrl+C
         /// </summary>
         public event Action CancelKeyPress = delegate { };
 
@@ -45,7 +45,7 @@ namespace GameOfLife.View
         /// <param name="minValue">Minimal value</param>
         /// <param name="maxValue">Maximum value</param>
         /// <returns></returns>
-        public WorldSize RequestWorldSize(int minValue = 1, int maxValue = 100)
+        public WorldSize RequestWorldSize(int minValue = 10, int maxValue = 20)
         {
             Console.Write($"Enter number of rows (from {minValue} to {maxValue}): ");
             int rows = ReadNumber(minValue, maxValue);
@@ -65,7 +65,6 @@ namespace GameOfLife.View
         /// </summary>
         /// <param name="minValue">Minimal value</param>
         /// <param name="maxValue">Maximum value</param>
-        /// <returns></returns>
         private int ReadNumber(int minValue, int maxValue)
         {
             int.TryParse(Console.ReadLine(), out int count);
@@ -109,7 +108,6 @@ namespace GameOfLife.View
         /// </summary>
         /// <param name="minValue">Minimal value</param>
         /// <param name="maxValue">Maximum value</param>
-        /// <returns></returns>
         public int RequestCountOfWorlds(int minValue = 1, int maxValue = 1000)
         {
             Console.Write($"Enter number of worlds (from {minValue} to {maxValue}): ");
@@ -178,6 +176,7 @@ namespace GameOfLife.View
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine("Game menu:");
             Console.WriteLine("1 - Start New Game");
             Console.WriteLine("2 - Continue Previous Game");
@@ -291,10 +290,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Prints specific string value with defined color
+        /// Prints specific string value with defined color - papildinat
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="color"></param>
+        /// <param name="text">Text</param>
+        /// <param name="color">Color</param>
         public void PrintLine(string text, ConsoleColor color)
         {
             var prevColor = Console.ForegroundColor;

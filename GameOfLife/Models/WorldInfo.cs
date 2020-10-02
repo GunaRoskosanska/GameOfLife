@@ -26,7 +26,7 @@
         public int Id { get; set; }
 
         /// <summary>
-        /// Determines whether the world is alive
+        /// Indicates whether the world is alive
         /// </summary>
         public bool IsWorldAlive { get; set; }
 
