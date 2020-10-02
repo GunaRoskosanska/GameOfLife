@@ -222,6 +222,10 @@ namespace GameOfLife.View
             PrintGameStatus(snapshot);
         }
 
+        /// <summary>
+        /// Shows information about the game data while generating worlds
+        /// </summary>
+        /// <param name="snapshot"></param>
         private void PrintGameStatus(GameSnapshot snapshot)
         {
             PrintLine($"Total Worlds: {snapshot.TotalWorlds, 4} Alive Worlds: {snapshot.TotalAliveWorlds,4} Lifes: {snapshot.TotalLifes,3}", ConsoleColor.White);
@@ -284,6 +288,11 @@ namespace GameOfLife.View
             return;
         }
 
+        /// <summary>
+        /// Prints specific string value with defined color
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
         public void PrintLine(string text, ConsoleColor color)
         {
             var prevColor = Console.ForegroundColor;

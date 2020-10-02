@@ -104,6 +104,9 @@ namespace GameOfLife.Logic
             }
         }
 
+        /// <summary>
+        /// Shows on screen Game menu (options)
+        /// </summary>
         public void OpenMenu()
         {
             GameOption gameOption = gamePresenter.RequestGameOption();
@@ -123,7 +126,7 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Continue game after pause (Ctrl + C) depending of the choice made
+        /// Continues game after pause (Ctrl + C) depending of the choice made
         /// </summary>
         public void OpenExtendedMenu()
         {
@@ -150,6 +153,9 @@ namespace GameOfLife.Logic
             }
         }
 
+        /// <summary>
+        /// Saves game to file
+        /// </summary>
         private void SaveGame()
         {
             var gameData = new GameData
@@ -160,7 +166,7 @@ namespace GameOfLife.Logic
 
             gameSaver.Save(gameData);
             gamePresenter.PrintGameSaved();
-            System.Threading.Thread.Sleep(1000); //small delay for displaying information
+            System.Threading.Thread.Sleep(1000); //short delay for displaying information
         }
 
         /// <summary>
