@@ -1,4 +1,5 @@
 ﻿using GameOfLife.Logic;
+using Newtonsoft.Json;
 
 namespace GameOfLife.Models
 {
@@ -9,10 +10,38 @@ namespace GameOfLife.Models
     {
         private WorldGenerator worldGenerator;
 
+
         /// <summary>
-        /// Information about world
+        /// Number of the game from 1 to 1000
         /// </summary>
-        public WorldInfo Info { get; private set; }
+        [JsonProperty]
+        public int Id { get; private set; }
+        /// <summary>
+        /// Indicates whether the world is alive
+        /// </summary>
+        [JsonProperty]
+        public bool IsAlive { get; private set; }
+        /// <summary>
+        /// World size
+        /// </summary>
+        [JsonProperty]
+        public WorldSize Size { get; private set; }
+        /// <summary>
+        /// Count of alive cells in the grid
+        /// </summary>
+        [JsonProperty]
+        public int AliveCells { get; private set; }
+        /// <summary>
+        /// Number of the generation
+        /// </summary>
+        [JsonProperty]
+        public int GenerationNumber { get; private set; }
+        /// <summary>
+        /// One generation grid of dead and alive cells
+        /// </summary>
+        [JsonProperty]
+        public CellStatus[,] Generation { get; private set; }
+
 
         /// <summary>
         /// World constructor
@@ -21,30 +50,24 @@ namespace GameOfLife.Models
         /// <param name="worldSize">Size of World (measured by rows and columns)</param>
         public World(int id, WorldSize worldSize)
         {
-            worldGenerator = new WorldGenerator(id, worldSize);
-            Info = new WorldInfo
-            {
-                Id = id
-            };
-        }
-
-        /// <summary>
-        /// World constructor
-        /// </summary>
-        /// <param name="worldInfo">Information about the world</param>
-        public World(WorldInfo worldInfo)
-        {
-            worldGenerator = new WorldGenerator(worldInfo);
-            Info = worldInfo;
+            worldGenerator = new WorldGenerator();
+            Id = id;
+            Size = worldSize;
         }
 
         /// <summary>
         /// Generates next generation of the world
         /// </summary>
-        public WorldInfo NextGeneration()
+        public void NextGeneration()
         {
-            Info = worldGenerator.NextGeneration();
-            return Info;
+            var result = GenerationNumber == 0 ?
+                worldGenerator.RandomGeneration(Size) :
+                worldGenerator.NextGeneration(Generation);
+
+            GenerationNumber++;
+            AliveCells = result.AliveCells;
+            Generation = result.Generation;
+            IsAlive = result.IsWorldAlive;
         }
     }
 }

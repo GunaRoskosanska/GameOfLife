@@ -18,12 +18,22 @@ namespace GameOfLife.Logic
         private List<World> worlds;
         private List<World> worldsToPrint;
 
+        /// <summary>
+        /// Indicates that game is running
+        /// </summary>
         public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Returns total worlds count
         /// </summary>
         public int WorldsCount { get { return worlds.Count; } }
+
+        /// <summary>
+        /// Returns total alive worlds
+        /// </summary>
+        public int TotalAliveWorlds { get; private set; }
+        public int TotalLifes { get; private set; }
+
 
         /// <summary>
         /// Game of life main logic part
@@ -35,65 +45,6 @@ namespace GameOfLife.Logic
             gamePresenter = new GamePresenter();
             gameSaver = new GameSaver("C:\\GameOfLife\\data.json");
             IsRunning = true;
-        }
-
-        /// <summary>
-        /// Creates new game
-        /// </summary>
-        public void CreateNewGame()
-        {
-            int countOfWorlds = gamePresenter.RequestCountOfWorlds();
-            WorldSize worldSize = gamePresenter.RequestWorldSize(10, 20);
-            worlds = new List<World>();
-            for (int i = 1; i <= countOfWorlds; i++)
-            {
-                var world = new World(i, worldSize);
-
-                worlds.Add(world);
-            }
-
-            int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
-            int[] numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
-            worldsToPrint = numbersOfworldsToPrint.Select(x => worlds[x-1]).ToList();
-
-            // To stop the game
-            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-
-            StartGameTimer();
-        }
-
-        /// <summary>
-        /// Continues previous game after pause
-        /// </summary>
-        public void ContinueGame()
-        {
-            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-            StartGameTimer();
-        }
-
-        /// <summary>
-        /// Continues previous saved game after pause
-        /// </summary>
-        public void LoadSavedGame()
-        {
-            GameSaveData gameData = gameSaver.Load();
-
-            if (gameData == null)
-            {
-                gamePresenter.PrintNoSavedGame();
-                CreateNewGame();
-            }
-            else
-            {
-
-                worlds = gameData.Worlds.Select(x => new World(x)).ToList();
-                worldsToPrint = gameData.WorldsToPrint.Select(x => worlds[x-1]).ToList();
-
-                // To stop the game
-                gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-
-                StartGameTimer();
-            }
         }
 
         /// <summary>
@@ -146,14 +97,73 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
+        /// Creates new game
+        /// </summary>
+        public void CreateNewGame()
+        {
+            int countOfWorlds = gamePresenter.RequestCountOfWorlds();
+            WorldSize worldSize = gamePresenter.RequestWorldSize(10, 20);
+            worlds = new List<World>();
+            for (int i = 1; i <= countOfWorlds; i++)
+            {
+                var world = new World(i, worldSize);
+
+                worlds.Add(world);
+            }
+
+            int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
+            int[] numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
+            worldsToPrint = numbersOfworldsToPrint.Select(x => worlds[x-1]).ToList();
+
+            // To stop the game
+            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
+
+            StartGameTimer();
+        }
+
+        /// <summary>
+        /// Continues previous game after pause
+        /// </summary>
+        public void ContinueGame()
+        {
+            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
+            StartGameTimer();
+        }
+
+        /// <summary>
+        /// Continues previous saved game after pause
+        /// </summary>
+        public void LoadSavedGame()
+        {
+            GameSaveData gameData = gameSaver.Load();
+
+            if (gameData == null)
+            {
+                gamePresenter.PrintNoSavedGame();
+                CreateNewGame();
+            }
+            else
+            {
+
+                worlds = gameData.Worlds;
+                worldsToPrint = gameData.WorldsToPrint.Select(x => worlds[x-1]).ToList();
+
+                // To stop the game
+                gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
+
+                StartGameTimer();
+            }
+        }
+
+        /// <summary>
         /// Saves game to file
         /// </summary>
         private void SaveGame()
         {
             var gameData = new GameSaveData
             {
-                Worlds = worlds.Select(x => x.Info).ToList(),
-                WorldsToPrint = worldsToPrint.Select(x => x.Info.Id).ToArray()
+                Worlds = worlds,
+                WorldsToPrint = worldsToPrint.Select(world => world.Id).ToArray()
             };
 
             gameSaver.Save(gameData);
@@ -209,10 +219,10 @@ namespace GameOfLife.Logic
 
             foreach (var world in worlds)
             {
-                var wordlInformation = world.NextGeneration();
+                world.NextGeneration();
 
-                snapshot.TotalAliveWorlds += wordlInformation.IsWorldAlive ? 1 : 0;
-                snapshot.TotalLifes += wordlInformation.AliveCells;
+                snapshot.TotalAliveWorlds += world.IsAlive ? 1 : 0;
+                snapshot.TotalLifes += world.AliveCells;
             }
 
             gamePresenter.Print(snapshot);

@@ -191,13 +191,13 @@ namespace GameOfLife.View
         {
             Console.Clear();
             
-            var worldSize = snapshot.WorldsToPrint.First().Info.Size;
+            var worldSize = snapshot.WorldsToPrint.First().Size;
 
             var strBuilder = new StringBuilder();
             foreach (var world in snapshot.WorldsToPrint)
             {
-                var deadOrAlive = world.Info.IsWorldAlive ? "Alive" : "Dead";
-                strBuilder.Append($"ID:{world.Info.Id} G:{world.Info.GenerationNumber} L:{world.Info.AliveCells} {deadOrAlive}".PadRight(30));
+                var deadOrAlive = world.IsAlive ? "Alive" : "Dead";
+                strBuilder.Append($"ID:{world.Id} G:{world.GenerationNumber} L:{world.AliveCells} {deadOrAlive}".PadRight(30));
             }
             PrintLine(strBuilder.ToString(), ConsoleColor.White);
 
@@ -209,7 +209,7 @@ namespace GameOfLife.View
                     var lineBuilder = new StringBuilder();
                     for (int j = 0; j < worldSize.Columns; j++)
                     {
-                        if (world.Info.LifesGenerationGrid[i, j] == CellStatus.Alive)
+                        if (world.Generation[i, j] == CellStatus.Alive)
                             lineBuilder.Append("·");
                         else
                             lineBuilder.Append(" ");
@@ -275,18 +275,6 @@ namespace GameOfLife.View
                         break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Shows on screen state of game
-        /// </summary>
-        /// <param name="worldInfo">Game information</param>
-        public void Print(WorldInfo worldInfo)
-        {
-            var worldAliveStatus = worldInfo.IsWorldAlive ? "Alive" : "Dead";
-            Console.WriteLine($"World ID: {worldInfo.Id,4} | Generation : {worldInfo.GenerationNumber,4} | Lives: {worldInfo.AliveCells,4} | {worldAliveStatus}");
-
-            return;
         }
 
         /// <summary>
