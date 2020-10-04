@@ -4,12 +4,12 @@ using System.Security.Cryptography;
 namespace GameOfLife.Logic
 {
     /// <summary>
-    /// Generates cells statuses in the grid (world)
+    /// Generates statuses of the cells in the grid (world).
     /// </summary>
     public class WorldGenerator
     {
         /// <summary>
-        /// Generates grid of first generation
+        /// Generates grid of first generation.
         /// </summary>
         public WorldGenerationResult RandomGeneration(WorldSize worldSize)
         {
@@ -41,9 +41,9 @@ namespace GameOfLife.Logic
         }
 
         /// <summary>
-        /// Generates grid for next generation based on current generation
+        /// Generates grid for the next generation based on current generation.
         /// </summary>
-        /// <param name="lifeGenerationGrid">Used to specify life generation grid</param>
+        /// <param name="lifeGenerationGrid">Used to specify life generation grid.</param>
         public WorldGenerationResult NextGeneration(CellStatus[,] lifeGenerationGrid)
         {
             var isWorldAlive = false;
@@ -100,7 +100,6 @@ namespace GameOfLife.Logic
                     if(currentCell!=nextGeneration[row, column])
                     {
                         isWorldAlive = true;
-                        //aliveWorlds++;
                     }
                 }
             }

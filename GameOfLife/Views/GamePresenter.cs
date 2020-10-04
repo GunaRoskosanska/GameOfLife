@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text;
 
 namespace GameOfLife.View
 {
     /// <summary>
-    /// Information of Game of Life that has to be shown to user
+    /// Information of Game of Life that has to be shown to user.
     /// </summary>
     public class GamePresenter
     {
@@ -18,7 +17,7 @@ namespace GameOfLife.View
         private const int Shift = 25;
 
         /// <summary>
-        /// Method to be invoked when press Ctrl+C
+        /// Method to be invoked when press Ctrl+C.
         /// </summary>
         public event Action PauseRequested = delegate { };
 
@@ -36,10 +35,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Requests to enter number of rows and columns for the game
+        /// Requests to enter number of rows and columns for the game.
         /// </summary>
-        /// <param name="minValue">Minimal value</param>
-        /// <param name="maxValue">Maximum value</param>
+        /// <param name="minValue">Minimal value.</param>
+        /// <param name="maxValue">Maximum value.</param>
         /// <returns></returns>
         public WorldSize RequestWorldSize(int minValue = 10, int maxValue = 20)
         {
@@ -57,7 +56,7 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Requests to choose game options (new game, continue previous game, exit)
+        /// Requests to choose game options.
         /// </summary>
         public GameOption RequestGameOption()
         {
@@ -82,10 +81,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Requests to enter number of worlds (games) to execure in parallel
+        /// Requests to enter number of worlds to execute in parallel.
         /// </summary>
-        /// <param name="minValue">Minimal value</param>
-        /// <param name="maxValue">Maximum value</param>
+        /// <param name="minValue">Minimal value.</param>
+        /// <param name="maxValue">Maximum value.</param>
         public int RequestCountOfWorlds(int minValue = 1, int maxValue = 1000)
         {
             Print($"Enter number of worlds (from {minValue} to {maxValue}): ");
@@ -95,7 +94,7 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Shows message that game has saved
+        /// Shows message that game has saved.
         /// </summary>
         public void PrintGameSaved()
         {
@@ -104,7 +103,7 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Shows message if there are no previously saved games
+        /// Shows message if there are no previously saved games.
         /// </summary>
         internal void PrintNoSavedGame()
         {
@@ -112,10 +111,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Requests to enter numbers of worlds (games) to be shown (up to 8 worlds)
+        /// Requests to enter numbers of worlds (games) to be shown.
         /// </summary>
-        /// <param name="numberOfWorldsToShow">8 or less (if total number of worlds is less than 8)</param>
-        /// <param name="countOfWorlds">Count of all worlds in the game</param>
+        /// <param name="numberOfWorldsToShow">8 or less (if total number of worlds is less than 8).</param>
+        /// <param name="countOfWorlds">Count of all worlds in the game.</param>
         public int[] RequestNumbersOfWorldToShow(int numberOfWorldsToShow, int countOfWorlds)
         {
             Print($"How many worlds You want to see (max {numberOfWorldsToShow})? ");
@@ -151,7 +150,7 @@ namespace GameOfLife.View
         /// <summary>
         /// Displays on console information about the game.
         /// </summary>
-        /// <param name="snapshot">Game information that has to be shown on screen</param>
+        /// <param name="snapshot">Game information that has to be shown on screen.</param>
         public void Print(GameSnapshot snapshot)
         {
             Console.Clear();
@@ -160,21 +159,30 @@ namespace GameOfLife.View
 
             var left = 0;
             var top = 0;
+            int worldsInRow = 0;
 
             foreach (var world in displayWorlds)
             {
                 Print(world, new Point(left, top));
                 left += Shift;
+                worldsInRow++;
+
+                if(worldsInRow % 4 == 0)
+                {
+                    left = 0;
+                    top += Shift;
+                }
             }
 
-            Console.SetCursorPosition(0, Shift);
+            Console.SetCursorPosition(0, top+Shift);
             PrintLine($"Total Worlds: {snapshot.TotalWorlds,4} Alive Worlds: {snapshot.TotalAliveWorlds,4} Lifes: {snapshot.TotalLifes,3}", ConsoleColor.White);
             PrintLine($"You can pause the game by pressing Ctrl+C.");
         }
+
         /// <summary>
         /// Displays on the console information about world at the specified position.
         /// </summary>
-        /// <param name="world">World information about which we want to display.</param>
+        /// <param name="world">Information about the worlds.</param>
         /// <param name="position">Position.</param>
         private void Print(World world, Point position)
         {
@@ -183,7 +191,7 @@ namespace GameOfLife.View
             
             Console.SetCursorPosition(left, top);
             var deadOrAlive = world.IsAlive ? "Alive" : "Dead";
-            Print($"ID:{world.Id} G:{world.GenerationNumber} L:{world.AliveCells} {deadOrAlive}".PadRight(Shift));
+            Print($"ID:{world.Id} G:{world.GenerationNumber} L:{world.AliveCells} {deadOrAlive}");
             top++;
 
             for (int i = 0; i < world.Size.Rows; i++)
@@ -202,12 +210,12 @@ namespace GameOfLife.View
                 }
 
                 Console.SetCursorPosition(left, top);
-                Print(stringBuilder.ToString().PadRight(Shift), world.IsAlive ? ConsoleColor.Green : ConsoleColor.Red);
+                Print(stringBuilder.ToString(), world.IsAlive ? ConsoleColor.Green : ConsoleColor.Red);
                 top++;
             }
         }
         /// <summary>
-        /// Requests game`s options after pause (Ctrl+C)
+        /// Requests game`s options after pause (Ctrl+C).
         /// </summary>
         public GameOption RequestGamePauseOption()
         {
@@ -234,11 +242,12 @@ namespace GameOfLife.View
                 }
             }
         }
+
         /// <summary>
-        /// Prints specific string value with defined color, followed by the current line terminator
+        /// Prints specific string value with defined color, followed by the current line terminator.
         /// </summary>
-        /// <param name="text">Text</param>
-        /// <param name="color">Color</param>
+        /// <param name="text">Text.</param>
+        /// <param name="color">Color.</param>
         public void PrintLine(string text, ConsoleColor color = ConsoleColor.White)
         {
             var prevColor = Console.ForegroundColor;
@@ -248,10 +257,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Prints specific string value with defined color
+        /// Prints specific string value with defined color.
         /// </summary>
-        /// <param name="text">Text</param>
-        /// <param name="color">Color</param>
+        /// <param name="text">Text.</param>
+        /// <param name="color">Color.</param>
         public void Print(string text, ConsoleColor color = ConsoleColor.White)
         {
             var prevColor = Console.ForegroundColor;
@@ -287,10 +296,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Reviews entered values (if they are numbers from minimal value to maximum value)
+        /// Reviews entered values (if they are numbers from minimal value to maximum value).
         /// </summary>
-        /// <param name="minValue">Minimal value</param>
-        /// <param name="maxValue">Maximum value</param>
+        /// <param name="minValue">Minimal value.</param>
+        /// <param name="maxValue">Maximum value.</param>
         private int ReadNumber(int minValue, int maxValue)
         {
             int.TryParse(Console.ReadLine(), out int count);
@@ -305,10 +314,10 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Shows this message when entered values are incorrect
+        /// Shows this message when entered values are incorrect.
         /// </summary>
-        /// <param name="minValue">Minimal value</param>
-        /// <param name="maxValue">Maximum value</param>
+        /// <param name="minValue">Minimal value.</param>
+        /// <param name="maxValue">Maximum value.</param>
         /// <returns></returns>
         private string InvalidInputValidationMessage(int minValue, int maxValue)
         {

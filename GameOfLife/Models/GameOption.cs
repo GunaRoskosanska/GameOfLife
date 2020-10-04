@@ -1,22 +1,22 @@
 ﻿namespace GameOfLife.Models
 {
     /// <summary>
-    /// Available game options
+    /// Available options of the game.
     /// </summary>
     public enum GameOption
     {
         /// <summary>
-        /// Start new game.
+        /// Option of the game - start new game.
         /// </summary>
         NewGame = 1,
 
         /// <summary>
-        /// Continue current game.
+        /// Option of the game - continue current game.
         /// </summary>
         ContinueGame = 2,
 
         /// <summary>
-        /// Сhange what exact games will be iterating on screen.
+        /// Option of the game - change what exact worlds will be shown on screen.
         /// </summary>
         ChangeWorlds = 3,
 

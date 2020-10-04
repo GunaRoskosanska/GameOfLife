@@ -2,7 +2,6 @@
 using GameOfLife.View;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -44,7 +43,7 @@ namespace GameOfLife.Logic
 
 
         /// <summary>
-        /// Initializes a new instance of the GameOfLife.
+        /// Initializes a new instance of the Game Of Life.
         /// </summary>
         public GameOfLife()
         {
@@ -69,9 +68,8 @@ namespace GameOfLife.Logic
             }
         }
 
-
         /// <summary>
-        /// Displays the menu and process selected game option.
+        /// Displays the menu and processes selected game option.
         /// </summary>
         private void OpenMenu()
         {
@@ -79,8 +77,9 @@ namespace GameOfLife.Logic
 
             ProcessGameOption(gameOption);
         }
+
         /// <summary>
-        /// Displays the pause menu and process selected game option.
+        /// Displays the pause menu and processes selected option of the game.
         /// </summary>
         private void OpenPauseMenu()
         {
@@ -88,8 +87,9 @@ namespace GameOfLife.Logic
 
             ProcessGameOption(gameOption);
         }
+
         /// <summary>
-        /// Process game option.
+        /// Processes options of the game.
         /// </summary>
         /// <param name="option">Game option</param>
         private void ProcessGameOption(GameOption option)
@@ -118,6 +118,7 @@ namespace GameOfLife.Logic
                     return;
             }
         }
+
         /// <summary>
         /// Creates new game.
         /// </summary>
@@ -133,6 +134,7 @@ namespace GameOfLife.Logic
             gamePresenter.PauseRequested += Pause;
             StartGameTimer();
         }
+
         /// <summary>
         /// Continues previous game after pause.
         /// </summary>
@@ -141,6 +143,7 @@ namespace GameOfLife.Logic
             gamePresenter.PauseRequested += Pause;
             StartGameTimer();
         }
+
         /// <summary>
         /// Changes worlds displayed on the screen.
         /// </summary>
@@ -149,6 +152,7 @@ namespace GameOfLife.Logic
             int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
             displayWorlds = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
         }
+
         /// <summary>
         /// Saves current game.
         /// </summary>
@@ -164,6 +168,7 @@ namespace GameOfLife.Logic
                 gamePresenter.PrintLine("Can not save the game. Reason: " + e.Message);
             }
         }
+
         /// <summary>
         /// Loads and continues saved game.
         /// </summary>
@@ -178,14 +183,15 @@ namespace GameOfLife.Logic
             }
             else
             {
-                worlds = snapshot.Worlds;
+                worlds = snapshot.Worlds; 
                 displayWorlds = snapshot.DisplayWorlds;
 
                 ContinueGame();
             }
         }
+
         /// <summary>
-        /// Pause current game.
+        /// Pauses current game.
         /// </summary>
         private void Pause()
         {
@@ -195,6 +201,7 @@ namespace GameOfLife.Logic
 
             OpenPauseMenu();
         }
+
         /// <summary>
         /// Enables game timer.
         /// </summary>
@@ -205,8 +212,9 @@ namespace GameOfLife.Logic
             timer.AutoReset = true;
             timer.Enabled = true;
         }
+
         /// <summary>
-        /// Gets a snapshot of the game
+        /// Gets a snapshot of the game.
         /// </summary>
         /// <returns></returns>
         private GameSnapshot Snapshot()
@@ -219,8 +227,9 @@ namespace GameOfLife.Logic
                 TotalLifes = TotalLifes,
             };
         }
+
         /// <summary>
-        /// Advance all worlds to a next generation.
+        /// Advances all worlds to a next generation.
         /// </summary>
         private void NextGeneration()
         {
@@ -238,8 +247,9 @@ namespace GameOfLife.Logic
             TotalAliveWorlds = totalAliveWorlds;
             TotalLifes = totalLifes;
         }
+
         /// <summary>
-        /// Creates list of worlds
+        /// Creates list of worlds.
         /// </summary>
         /// <param name="worldsCount">Count of worlds to create</param>
         /// <param name="worldSize">World size</param>
@@ -257,13 +267,13 @@ namespace GameOfLife.Logic
 
             return newWorlds;
         }
+
         /// <summary>
         /// Occurs when the timer elapses.
         /// </summary>
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
             NextGeneration();
-
             gamePresenter.Print(Snapshot());
         }
     }

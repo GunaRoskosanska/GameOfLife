@@ -36,11 +36,10 @@ namespace GameOfLife.Models
         [JsonProperty]
         public int GenerationNumber { get; private set; }
         /// <summary>
-        /// Gets or sets current world generation.
+        /// Gets or sets current world`s generation.
         /// </summary>
         [JsonProperty]
         public CellStatus[,] Generation { get; private set; }
-
 
         /// <summary>
         /// Initializes a new instance of the World.
@@ -55,7 +54,7 @@ namespace GameOfLife.Models
         }
 
         /// <summary>
-        /// Advance the world to a next generation.
+        /// Advances the world to the next generation.
         /// </summary>
         public void NextGeneration()
         {

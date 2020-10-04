@@ -1,7 +1,7 @@
 ﻿namespace GameOfLife.Models
 {
     /// <summary>
-    /// Represents world generation result.
+    /// Represents world`s generation result.
     /// </summary>
     public class WorldGenerationResult
     {

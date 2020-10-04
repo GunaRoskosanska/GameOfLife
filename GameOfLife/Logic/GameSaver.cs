@@ -48,9 +48,8 @@ namespace GameOfLife.Logic
             }
         }
 
-
         /// <summary>
-        /// Ensures game directory exists.
+        /// Ensures that game`s directory exists.
         /// </summary>
         private void EnsureDirectory()
         {
