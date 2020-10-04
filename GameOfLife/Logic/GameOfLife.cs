@@ -1,5 +1,6 @@
 ﻿using GameOfLife.Models;
 using GameOfLife.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -7,225 +8,263 @@ using System.Timers;
 namespace GameOfLife.Logic
 {
     /// <summary>
-    /// Game of life main logic part
+    /// Game of life main logic part.
     /// </summary>
     public class GameOfLife
     {
+        private const int OneSecond = 1000;
         private const int CountOfWorldsToShow = 8;
+        private const int MinWorldSize = 10;
+        private const int MaxWorldSize = 20;
         private GameSaver gameSaver;
         private GamePresenter gamePresenter;
         private Timer timer;
         private List<World> worlds;
-        private List<World> worldsToPrint;
+        private int[] displayWorlds;
 
         /// <summary>
-        /// Indicates that game is running
+        /// Gets or sets a value indicating whether the game is running.
         /// </summary>
-        public bool IsRunning { get; private set; }
+        public bool Running { get; private set; }
 
         /// <summary>
-        /// Returns total worlds count
+        /// Gets total worlds count.
         /// </summary>
         public int WorldsCount { get { return worlds.Count; } }
 
         /// <summary>
-        /// Returns total alive worlds
+        /// Gets or sets total alive worlds.
         /// </summary>
         public int TotalAliveWorlds { get; private set; }
+
+        /// <summary>
+        /// Gets or sets total lifes in all worlds.
+        /// </summary>
         public int TotalLifes { get; private set; }
 
 
         /// <summary>
-        /// Game of life main logic part
+        /// Initializes a new instance of the GameOfLife.
         /// </summary>
         public GameOfLife()
         {
             worlds = new List<World>();
-            worldsToPrint = new List<World>();
+            displayWorlds = new int[0];
             gamePresenter = new GamePresenter();
-            gameSaver = new GameSaver("C:\\GameOfLife\\data.json");
-            IsRunning = true;
+            gameSaver = new GameSaver("game.json");
         }
 
         /// <summary>
-        /// Shows on screen Game menu (options)
+        /// Run game.
         /// </summary>
-        public void OpenMenu()
+        public void Run()
         {
-            GameOption gameOption = gamePresenter.RequestGameOption();
+            Running = true;
 
-            switch (gameOption)
+            OpenMenu();
+
+            while (Running)
             {
-                case GameOption.NewGame:
-                    CreateNewGame();
-                    break;
-                case GameOption.ContinuePreviousGame:
-                    LoadSavedGame();
-                    break;
-                case GameOption.Exit:
-                    IsRunning = false;
-                    return;
+                System.Threading.Thread.Sleep(OneSecond);
             }
         }
 
+
         /// <summary>
-        /// Opens the menu and continues game after pause (Ctrl + C) depending of the choice made
+        /// Displays the menu and process selected game option.
         /// </summary>
-        public void OpenExtendedMenu()
+        private void OpenMenu()
+        {
+            GameOption gameOption = gamePresenter.RequestGameOption();
+
+            ProcessGameOption(gameOption);
+        }
+        /// <summary>
+        /// Displays the pause menu and process selected game option.
+        /// </summary>
+        private void OpenPauseMenu()
         {
             GameOption gameOption = gamePresenter.RequestGamePauseOption();
 
-            switch (gameOption)
+            ProcessGameOption(gameOption);
+        }
+        /// <summary>
+        /// Process game option.
+        /// </summary>
+        /// <param name="option">Game option</param>
+        private void ProcessGameOption(GameOption option)
+        {
+            switch (option)
             {
                 case GameOption.NewGame:
-                    CreateNewGame();
+                    CreateGame();
                     break;
-                case GameOption.ContinuePreviousGame:
+                case GameOption.ContinueGame:
+                    ContinueGame();
+                    break;
+                case GameOption.ChangeWorlds:
+                    RequestDisplayWorlds();
                     ContinueGame();
                     break;
                 case GameOption.SaveGame:
                     SaveGame();
-                    OpenExtendedMenu();
+                    OpenPauseMenu();
                     break;
-                case GameOption.ChangeWorldsOnScreen:
-                    ChangeWorldsOnScreen();
+                case GameOption.LoadGame:
+                    ContinueSavedGame();
                     break;
                 case GameOption.Exit:
-                    IsRunning = false;
+                    Running = false;
                     return;
             }
         }
-
         /// <summary>
-        /// Creates new game
+        /// Creates new game.
         /// </summary>
-        public void CreateNewGame()
+        private void CreateGame()
         {
-            int countOfWorlds = gamePresenter.RequestCountOfWorlds();
-            WorldSize worldSize = gamePresenter.RequestWorldSize(10, 20);
-            worlds = new List<World>();
-            for (int i = 1; i <= countOfWorlds; i++)
-            {
-                var world = new World(i, worldSize);
+            int worldsCount = gamePresenter.RequestCountOfWorlds();
+            WorldSize worldSize = gamePresenter.RequestWorldSize(MinWorldSize, MaxWorldSize);
 
-                worlds.Add(world);
-            }
+            worlds = CreateWorlds(worldsCount, worldSize);
 
+            RequestDisplayWorlds();
+
+            gamePresenter.PauseRequested += Pause;
+            StartGameTimer();
+        }
+        /// <summary>
+        /// Continues previous game after pause.
+        /// </summary>
+        private void ContinueGame()
+        {
+            gamePresenter.PauseRequested += Pause;
+            StartGameTimer();
+        }
+        /// <summary>
+        /// Changes worlds displayed on the screen.
+        /// </summary>
+        public void RequestDisplayWorlds()
+        {
             int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
-            int[] numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
-            worldsToPrint = numbersOfworldsToPrint.Select(x => worlds[x-1]).ToList();
-
-            // To stop the game
-            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-
-            StartGameTimer();
+            displayWorlds = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
         }
-
         /// <summary>
-        /// Continues previous game after pause
-        /// </summary>
-        public void ContinueGame()
-        {
-            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-            StartGameTimer();
-        }
-
-        /// <summary>
-        /// Continues previous saved game after pause
-        /// </summary>
-        public void LoadSavedGame()
-        {
-            GameSaveData gameData = gameSaver.Load();
-
-            if (gameData == null)
-            {
-                gamePresenter.PrintNoSavedGame();
-                CreateNewGame();
-            }
-            else
-            {
-
-                worlds = gameData.Worlds;
-                worldsToPrint = gameData.WorldsToPrint.Select(x => worlds[x-1]).ToList();
-
-                // To stop the game
-                gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-
-                StartGameTimer();
-            }
-        }
-
-        /// <summary>
-        /// Saves game to file
+        /// Saves current game.
         /// </summary>
         private void SaveGame()
         {
-            var gameData = new GameSaveData
+            try
             {
-                Worlds = worlds,
-                WorldsToPrint = worldsToPrint.Select(world => world.Id).ToArray()
-            };
-
-            gameSaver.Save(gameData);
-            gamePresenter.PrintGameSaved();
-            System.Threading.Thread.Sleep(1000); //short delay for displaying information
+                gameSaver.Save(Snapshot());
+                gamePresenter.PrintGameSaved();
+            }
+            catch (Exception e)
+            {
+                gamePresenter.PrintLine("Can not save the game. Reason: " + e.Message);
+            }
         }
-
         /// <summary>
-        /// Changes worlds on the screen
+        /// Loads and continues saved game.
         /// </summary>
-        public void ChangeWorldsOnScreen()
+        private void ContinueSavedGame()
         {
-            int countToRequest = WorldsCount > CountOfWorldsToShow ? CountOfWorldsToShow : WorldsCount;
-            var numbersOfworldsToPrint = gamePresenter.RequestNumbersOfWorldToShow(countToRequest, WorldsCount);
-            worldsToPrint = numbersOfworldsToPrint.Select(x => worlds[x-1]).ToList();
-            gamePresenter.CancelKeyPress += GamePresenterCancelKeyPress;
-            StartGameTimer();
+            GameSnapshot snapshot = gameSaver.Load();
+
+            if (snapshot == null)
+            {
+                gamePresenter.PrintNoSavedGame();
+                CreateGame();
+            }
+            else
+            {
+                worlds = snapshot.Worlds;
+                displayWorlds = snapshot.DisplayWorlds;
+
+                ContinueGame();
+            }
         }
-
         /// <summary>
-        /// Handles cancel key press
+        /// Pause current game.
         /// </summary>
-        private void GamePresenterCancelKeyPress()
+        private void Pause()
         {
-            timer.Enabled = false;
             timer.Elapsed -= OnTimerElapsed;
-            gamePresenter.CancelKeyPress -= GamePresenterCancelKeyPress;
-            OpenExtendedMenu();
-        }
+            gamePresenter.PauseRequested -= Pause;
+            timer.Enabled = false;
 
+            OpenPauseMenu();
+        }
         /// <summary>
-        /// Enables game timer
+        /// Enables game timer.
         /// </summary>
-        public void StartGameTimer()
+        private void StartGameTimer()
         {
             timer = new Timer(1000);
             timer.Elapsed += OnTimerElapsed;
             timer.AutoReset = true;
             timer.Enabled = true;
         }
-
         /// <summary>
-        /// Handler for timer event
+        /// Gets a snapshot of the game
         /// </summary>
-        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        /// <returns></returns>
+        private GameSnapshot Snapshot()
         {
-            var snapshot = new GameSnapshot
+            return new GameSnapshot
             {
-                TotalWorlds = worlds.Count,
-                WorldsToPrint = worldsToPrint,
-                Worlds = worlds
+                Worlds = worlds,
+                DisplayWorlds = displayWorlds,
+                TotalAliveWorlds = TotalAliveWorlds,
+                TotalLifes = TotalLifes,
             };
+        }
+        /// <summary>
+        /// Advance all worlds to a next generation.
+        /// </summary>
+        private void NextGeneration()
+        {
+            var totalAliveWorlds = 0;
+            var totalLifes = 0;
 
             foreach (var world in worlds)
             {
                 world.NextGeneration();
 
-                snapshot.TotalAliveWorlds += world.IsAlive ? 1 : 0;
-                snapshot.TotalLifes += world.AliveCells;
+                totalAliveWorlds += world.IsAlive ? 1 : 0;
+                totalLifes += world.AliveCells;
             }
 
-            gamePresenter.Print(snapshot);
+            TotalAliveWorlds = totalAliveWorlds;
+            TotalLifes = totalLifes;
+        }
+        /// <summary>
+        /// Creates list of worlds
+        /// </summary>
+        /// <param name="worldsCount">Count of worlds to create</param>
+        /// <param name="worldSize">World size</param>
+        /// <returns></returns>
+        private List<World> CreateWorlds(int worldsCount, WorldSize worldSize)
+        {
+            var newWorlds = new List<World>();
+
+            for (int i = 1; i <= worldsCount; i++)
+            {
+                var world = new World(i, worldSize);
+
+                newWorlds.Add(world);
+            }
+
+            return newWorlds;
+        }
+        /// <summary>
+        /// Occurs when the timer elapses.
+        /// </summary>
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            NextGeneration();
+
+            gamePresenter.Print(Snapshot());
         }
     }
 }

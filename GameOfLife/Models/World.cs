@@ -4,50 +4,49 @@ using Newtonsoft.Json;
 namespace GameOfLife.Models
 {
     /// <summary>
-    /// Information about the World
+    /// Represents information about a world.
     /// </summary>
     public class World
     {
-        private WorldGenerator worldGenerator;
-
+        private readonly WorldGenerator worldGenerator;
 
         /// <summary>
-        /// Number of the game from 1 to 1000
+        /// Gets or sets a uinique world identifier.
         /// </summary>
         [JsonProperty]
         public int Id { get; private set; }
         /// <summary>
-        /// Indicates whether the world is alive
+        /// Gets or sets a value indicating whether the world is alive.
         /// </summary>
         [JsonProperty]
         public bool IsAlive { get; private set; }
         /// <summary>
-        /// World size
+        /// Gets or sets the world size.
         /// </summary>
         [JsonProperty]
         public WorldSize Size { get; private set; }
         /// <summary>
-        /// Count of alive cells in the grid
+        /// Gets or sets the alive cells count.
         /// </summary>
         [JsonProperty]
         public int AliveCells { get; private set; }
         /// <summary>
-        /// Number of the generation
+        /// Gets or sets the generation's number.
         /// </summary>
         [JsonProperty]
         public int GenerationNumber { get; private set; }
         /// <summary>
-        /// One generation grid of dead and alive cells
+        /// Gets or sets current world generation.
         /// </summary>
         [JsonProperty]
         public CellStatus[,] Generation { get; private set; }
 
 
         /// <summary>
-        /// World constructor
+        /// Initializes a new instance of the World.
         /// </summary>
-        /// <param name="id">Number of the game from 1 to maxValue</param>
-        /// <param name="worldSize">Size of World (measured by rows and columns)</param>
+        /// <param name="id">Unique world identifier</param>
+        /// <param name="worldSize">Size of World (measured by rows and columns).</param>
         public World(int id, WorldSize worldSize)
         {
             worldGenerator = new WorldGenerator();
@@ -56,7 +55,7 @@ namespace GameOfLife.Models
         }
 
         /// <summary>
-        /// Generates next generation of the world
+        /// Advance the world to a next generation.
         /// </summary>
         public void NextGeneration()
         {

@@ -3,41 +3,33 @@
 namespace GameOfLife.Models
 {
     /// <summary>
-    /// Contains information that will be shown on screen
+    /// Represents the state of the game at a particular point in time.
     /// </summary>
     public class GameSnapshot
     {
         /// <summary>
-        /// Game snapshot constructor
-        /// </summary>
-        public GameSnapshot()
-        {
-            WorldsToPrint = new List<World>();
-        }
-
-        /// <summary>
-        /// Count of total lifes in all worlds
+        /// Gets or sets total lifes in all worlds.
         /// </summary>
         public int TotalLifes { get; set; }
 
         /// <summary>
-        /// Count of all worlds with status Alive
+        /// Gets or sets total alive worlds.
         /// </summary>
         public int TotalAliveWorlds { get; set; }
 
         /// <summary>
-        /// Count of all worlds
+        /// Gets total worlds count.
         /// </summary>
-        public int TotalWorlds { get; set; }
+        public int TotalWorlds => Worlds?.Count ?? 0;
 
         /// <summary>
-        /// List of worlds that have to be shown on screen
+        /// Gets or sets the worlds to display.
         /// </summary>
-        public List<World> WorldsToPrint { get; set; }
+        public int[] DisplayWorlds { get; set; }
 
         /// <summary>
-        /// List of all worlds
+        /// Gets or sets all worlds.
         /// </summary>
-        public List<World> Worlds { get; internal set; }
+        public List<World> Worlds { get; set; }
     }
 }

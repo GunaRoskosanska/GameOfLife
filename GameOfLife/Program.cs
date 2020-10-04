@@ -1,20 +1,11 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace GameOfLife
+﻿namespace GameOfLife
 {
     public class Program
     {
         static void Main(string[] args)
         {
             var game = new Logic.GameOfLife();
-            game.OpenMenu();
-
-            while (game.IsRunning)
-            {
-                Thread.Sleep(millisecondsTimeout: 1500);
-            }
+            game.Run();
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using GameOfLife.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace GameOfLife.View
@@ -11,31 +13,25 @@ namespace GameOfLife.View
     /// </summary>
     public class GamePresenter
     {
-        /// <summary>
-        /// Shows this message when entered values are incorrect
-        /// </summary>
-        /// <param name="minValue">Minimal value</param>
-        /// <param name="maxValue">Maximum value</param>
-        /// <returns></returns>
-        private string InvalidInputValidationMessage(int minValue, int maxValue)
-        {
-            return $"Please enter positive numbers only from {minValue} to {maxValue}. ";
-        }
+        private const char AliveCell = '·';
+        private const char DeadCell = ' ';
+        private const int Shift = 25;
 
         /// <summary>
         /// Method to be invoked when press Ctrl+C
         /// </summary>
-        public event Action CancelKeyPress = delegate { };
+        public event Action PauseRequested = delegate { };
 
         /// <summary>
-        /// Game presenter constructor
+        /// Initializes a new instance of the GamePresenter.
         /// </summary>
         public GamePresenter()
         {
+            //Subscribes on Ctrl+C event
             Console.CancelKeyPress += (s, e) =>
             {
                 e.Cancel = true;
-                CancelKeyPress?.Invoke();
+                PauseRequested?.Invoke();
             };
         }
 
@@ -47,10 +43,10 @@ namespace GameOfLife.View
         /// <returns></returns>
         public WorldSize RequestWorldSize(int minValue = 10, int maxValue = 20)
         {
-            Console.Write($"Enter number of rows (from {minValue} to {maxValue}): ");
+            Print($"Enter number of rows (from {minValue} to {maxValue}): ");
             int rows = ReadNumber(minValue, maxValue);
 
-            Console.Write($"Enter number of columns (from {minValue} to {maxValue}): ");
+            Print($"Enter number of columns (from {minValue} to {maxValue}): ");
             var columns = ReadNumber(minValue, maxValue);
 
             return new WorldSize
@@ -61,42 +57,24 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Reviews entered values (if they are numbers from minimal value to maximum value)
-        /// </summary>
-        /// <param name="minValue">Minimal value</param>
-        /// <param name="maxValue">Maximum value</param>
-        private int ReadNumber(int minValue, int maxValue)
-        {
-            int.TryParse(Console.ReadLine(), out int count);
-
-            while (count < minValue || count > maxValue)
-            {
-                Console.Write(InvalidInputValidationMessage(minValue, maxValue));
-                int.TryParse(Console.ReadLine(), out count);
-            }
-
-            return count;
-        }
-
-        /// <summary>
         /// Requests to choose game options (new game, continue previous game, exit)
         /// </summary>
         public GameOption RequestGameOption()
         {
             while (true)
             {
-                PrintGameMenu();
+                PrintMenu();
                 var option = Console.ReadLine();
                 switch (option)
                 {
                     case "1":
                         return GameOption.NewGame;
                     case "2":
-                        return GameOption.ContinuePreviousGame;
+                        return GameOption.LoadGame;
                     case "3":
                         return GameOption.Exit;
                     default:
-                        Console.WriteLine("Please choose one of the options above. Enter any key...");
+                        PrintLine("Please choose one of the options above. Enter any key...");
                         Console.ReadKey(false);
                         break;
                 }
@@ -110,7 +88,7 @@ namespace GameOfLife.View
         /// <param name="maxValue">Maximum value</param>
         public int RequestCountOfWorlds(int minValue = 1, int maxValue = 1000)
         {
-            Console.Write($"Enter number of worlds (from {minValue} to {maxValue}): ");
+            Print($"Enter number of worlds (from {minValue} to {maxValue}): ");
             int countOfWorlds = ReadNumber(minValue, maxValue);
 
             return countOfWorlds;
@@ -119,9 +97,10 @@ namespace GameOfLife.View
         /// <summary>
         /// Shows message that game has saved
         /// </summary>
-        internal void PrintGameSaved()
+        public void PrintGameSaved()
         {
-            Console.WriteLine("Game saved.");
+            PrintLine("Game saved successfully.");
+            System.Threading.Thread.Sleep(1000); //short delay for displaying information
         }
 
         /// <summary>
@@ -129,7 +108,7 @@ namespace GameOfLife.View
         /// </summary>
         internal void PrintNoSavedGame()
         {
-            Console.WriteLine("There are no saved games. Please start new game.");
+            PrintLine("There are no saved games. Please start new game.");
         }
 
         /// <summary>
@@ -139,27 +118,27 @@ namespace GameOfLife.View
         /// <param name="countOfWorlds">Count of all worlds in the game</param>
         public int[] RequestNumbersOfWorldToShow(int numberOfWorldsToShow, int countOfWorlds)
         {
-            Console.Write($"How many worlds You want to see (max {numberOfWorldsToShow})? ");
+            Print($"How many worlds You want to see (max {numberOfWorldsToShow})? ");
             int countOfWorldsToShow = ReadNumber(1, numberOfWorldsToShow);
 
             while (countOfWorldsToShow > numberOfWorldsToShow || countOfWorldsToShow < 1)
             {
-                Console.Write($"Please enter positive numbers only from 1 to {numberOfWorldsToShow}. ");
+                Print($"Please enter positive numbers only from 1 to {numberOfWorldsToShow}. ");
                 countOfWorldsToShow = ReadNumber(1, numberOfWorldsToShow);
             }
 
             List<int> numbersOfWorlds = new List<int>();
 
-            Console.WriteLine("Every world has its own number starting from 1. ");
+            PrintLine("Every world has its own number starting from 1. ");
 
             for (int i = 0; i < countOfWorldsToShow; i++)
             {
-                Console.Write("Enter number of the world " + $"{i + 1}" + ": ");
+                Print("Enter number of the world " + $"{i + 1}" + ": ");
                 int numberOfWorld = ReadNumber(1, countOfWorlds);
 
                 while (numbersOfWorlds.Contains(numberOfWorld))
                 {
-                    Console.Write("This world is already selected. Please choose another one. ");
+                    Print("This world is already selected. Please choose another one. ");
                     numberOfWorld = ReadNumber(1, countOfWorlds);
                 }
 
@@ -170,84 +149,63 @@ namespace GameOfLife.View
         }
 
         /// <summary>
-        /// Shows game`s options at the beginning
-        /// </summary>
-        public void PrintGameMenu()
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.WriteLine("Game menu:");
-            Console.WriteLine("1 - Start New Game");
-            Console.WriteLine("2 - Continue Previous Game");
-            Console.WriteLine("3 - Exit");
-        }
-
-        /// <summary>
-        /// Shows on screen information about the game
+        /// Displays on console information about the game.
         /// </summary>
         /// <param name="snapshot">Game information that has to be shown on screen</param>
         public void Print(GameSnapshot snapshot)
         {
             Console.Clear();
+
+            var displayWorlds = snapshot.DisplayWorlds.Select(x => snapshot.Worlds[x - 1]).ToArray();
+
+            var left = 0;
+            var top = 0;
+
+            foreach (var world in displayWorlds)
+            {
+                Print(world, new Point(left, top));
+                left += Shift;
+            }
+
+            Console.SetCursorPosition(0, Shift);
+            PrintLine($"Total Worlds: {snapshot.TotalWorlds,4} Alive Worlds: {snapshot.TotalAliveWorlds,4} Lifes: {snapshot.TotalLifes,3}", ConsoleColor.White);
+            PrintLine($"You can pause the game by pressing Ctrl+C.");
+        }
+        /// <summary>
+        /// Displays on the console information about world at the specified position.
+        /// </summary>
+        /// <param name="world">World information about which we want to display.</param>
+        /// <param name="position">Position.</param>
+        private void Print(World world, Point position)
+        {
+            var left = position.X;
+            var top = position.Y;
             
-            var worldSize = snapshot.WorldsToPrint.First().Size;
+            Console.SetCursorPosition(left, top);
+            var deadOrAlive = world.IsAlive ? "Alive" : "Dead";
+            Print($"ID:{world.Id} G:{world.GenerationNumber} L:{world.AliveCells} {deadOrAlive}".PadRight(Shift));
+            top++;
 
-            var strBuilder = new StringBuilder();
-            foreach (var world in snapshot.WorldsToPrint)
+            for (int i = 0; i < world.Size.Rows; i++)
             {
-                var deadOrAlive = world.IsAlive ? "Alive" : "Dead";
-                strBuilder.Append($"ID:{world.Id} G:{world.GenerationNumber} L:{world.AliveCells} {deadOrAlive}".PadRight(30));
-            }
-            PrintLine(strBuilder.ToString(), ConsoleColor.White);
-
-            strBuilder = new StringBuilder();
-            for (int i = 0; i < worldSize.Rows; i++)
-            {
-                foreach (var world in snapshot.WorldsToPrint)
+                var stringBuilder = new StringBuilder();
+                for (int j = 0; j < world.Size.Columns; j++)
                 {
-                    var lineBuilder = new StringBuilder();
-                    for (int j = 0; j < worldSize.Columns; j++)
+                    if (world.Generation[i, j] == CellStatus.Alive)
                     {
-                        if (world.Generation[i, j] == CellStatus.Alive)
-                            lineBuilder.Append("·");
-                        else
-                            lineBuilder.Append(" ");
+                        stringBuilder.Append(AliveCell);
                     }
-                    strBuilder.Append(lineBuilder.ToString().PadRight(30));
+                    else
+                    {
+                        stringBuilder.Append(DeadCell);
+                    }
                 }
-                strBuilder.AppendLine();
+
+                Console.SetCursorPosition(left, top);
+                Print(stringBuilder.ToString().PadRight(Shift), world.IsAlive ? ConsoleColor.Green : ConsoleColor.Red);
+                top++;
             }
-            PrintLine(strBuilder.ToString(), ConsoleColor.Green);
-
-            PrintGameStatus(snapshot);
         }
-
-        /// <summary>
-        /// Shows information about the game data while generating worlds
-        /// </summary>
-        /// <param name="snapshot">Information that has to be shown</param>
-        private void PrintGameStatus(GameSnapshot snapshot)
-        {
-            PrintLine($"Total Worlds: {snapshot.TotalWorlds, 4} Alive Worlds: {snapshot.TotalAliveWorlds,4} Lifes: {snapshot.TotalLifes,3}", ConsoleColor.White);
-            Console.WriteLine($"You can stop the application by pressing Ctrl+C.");
-        }
-
-        /// <summary>
-        /// Shows game`s options after pause
-        /// </summary>
-        public void PrintGameSecondMenu()
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Game menu:");
-            Console.WriteLine("1 - Start New Game");
-            Console.WriteLine("2 - Continue Previous Game");
-            Console.WriteLine("3 - Exit");
-            Console.WriteLine("4 - Save game");
-            Console.WriteLine("5 - Change selected worlds on the screen");
-        }
-
         /// <summary>
         /// Requests game`s options after pause (Ctrl+C)
         /// </summary>
@@ -255,39 +213,106 @@ namespace GameOfLife.View
         {
             while (true)
             {
-                PrintGameSecondMenu();
+                PrintPauseMenu();
                 var gameOption = Console.ReadLine();
                 switch (gameOption)
                 {
                     case "1":
                         return GameOption.NewGame;
                     case "2":
-                        return GameOption.ContinuePreviousGame;
+                        return GameOption.ContinueGame;
                     case "3":
-                        return GameOption.Exit;
+                        return GameOption.ChangeWorlds;
                     case "4":
                         return GameOption.SaveGame;
                     case "5":
-                        return GameOption.ChangeWorldsOnScreen;
+                        return GameOption.Exit;
                     default:
-                        Console.WriteLine("Please choose one of the options above. Enter any key...");
+                        PrintLine("Please choose one of the options above. Enter any key...");
                         Console.ReadKey(false);
                         break;
                 }
             }
         }
-
         /// <summary>
-        /// Prints specific string value with defined color - papildinat
+        /// Prints specific string value with defined color, followed by the current line terminator
         /// </summary>
         /// <param name="text">Text</param>
         /// <param name="color">Color</param>
-        public void PrintLine(string text, ConsoleColor color)
+        public void PrintLine(string text, ConsoleColor color = ConsoleColor.White)
         {
             var prevColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
             Console.WriteLine(text);
             Console.ForegroundColor = prevColor;
+        }
+
+        /// <summary>
+        /// Prints specific string value with defined color
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <param name="color">Color</param>
+        public void Print(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            var prevColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ForegroundColor = prevColor;
+        }
+
+        /// <summary>
+        /// Displays game menu.
+        /// </summary>
+        private void PrintMenu()
+        {
+            Console.Clear();
+            PrintLine("Game menu:");
+            PrintLine("1 - Start new game");
+            PrintLine("2 - Load Game");
+            PrintLine("3 - Exit");
+        }
+
+        /// <summary>
+        /// Displays game pause menu.
+        /// </summary>
+        private void PrintPauseMenu()
+        {
+            Console.Clear();
+            PrintLine("Game menu:");
+            PrintLine("1 - Start new game");
+            PrintLine("2 - Continue game");
+            PrintLine("3 - Change displayed worlds");
+            PrintLine("4 - Save game");
+            PrintLine("5 - Exit");
+        }
+
+        /// <summary>
+        /// Reviews entered values (if they are numbers from minimal value to maximum value)
+        /// </summary>
+        /// <param name="minValue">Minimal value</param>
+        /// <param name="maxValue">Maximum value</param>
+        private int ReadNumber(int minValue, int maxValue)
+        {
+            int.TryParse(Console.ReadLine(), out int count);
+
+            while (count < minValue || count > maxValue)
+            {
+                Print(InvalidInputValidationMessage(minValue, maxValue));
+                int.TryParse(Console.ReadLine(), out count);
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Shows this message when entered values are incorrect
+        /// </summary>
+        /// <param name="minValue">Minimal value</param>
+        /// <param name="maxValue">Maximum value</param>
+        /// <returns></returns>
+        private string InvalidInputValidationMessage(int minValue, int maxValue)
+        {
+            return $"Please enter numbers only from {minValue} to {maxValue}. ";
         }
     }
 }
