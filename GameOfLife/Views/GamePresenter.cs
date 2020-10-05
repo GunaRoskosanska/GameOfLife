@@ -14,7 +14,7 @@ namespace GameOfLife.View
     {
         private const char AliveCell = '·';
         private const char DeadCell = ' ';
-        private const int Shift = 25;
+        private const int Shift = 23;
 
         /// <summary>
         /// Method to be invoked when press Ctrl+C.
@@ -167,7 +167,7 @@ namespace GameOfLife.View
                 left += Shift;
                 worldsInRow++;
 
-                if(worldsInRow % 4 == 0)
+                if(worldsInRow % 5 == 0)
                 {
                     left = 0;
                     top += Shift;
