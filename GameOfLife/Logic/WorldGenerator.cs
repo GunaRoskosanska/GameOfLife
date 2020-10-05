@@ -1,4 +1,5 @@
 ﻿using GameOfLife.Models;
+using System;
 using System.Security.Cryptography;
 
 namespace GameOfLife.Logic
@@ -13,6 +14,10 @@ namespace GameOfLife.Logic
         /// </summary>
         public WorldGenerationResult RandomGeneration(WorldSize worldSize)
         {
+            //if(worldSize size is invalid)
+            //throw new ArgumentException("World Size has incorrect value", nameof(worldSize));
+
+
             var firstGeneration = new CellStatus[worldSize.Rows, worldSize.Columns];
             int aliveCells = 0;
 
@@ -35,7 +40,7 @@ namespace GameOfLife.Logic
             return new WorldGenerationResult
             {
                 AliveCells = aliveCells,
-                IsWorldAlive = aliveCells > 0,
+                IsGenerationAlive = aliveCells > 0,
                 Generation = firstGeneration
             };
         }
@@ -107,7 +112,7 @@ namespace GameOfLife.Logic
             return new WorldGenerationResult
             {
                 AliveCells = aliveCells,
-                IsWorldAlive = isWorldAlive,
+                IsGenerationAlive = isWorldAlive,
                 Generation = nextGeneration
             };
         }

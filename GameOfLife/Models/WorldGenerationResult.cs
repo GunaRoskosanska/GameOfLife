@@ -12,7 +12,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether the world is alive.
         /// </summary>
-        public bool IsWorldAlive { get; set; }
+        public bool IsGenerationAlive { get; set; }
         /// <summary>
         /// Gets or sets current world generation.
         /// </summary>

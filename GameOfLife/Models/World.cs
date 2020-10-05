@@ -65,7 +65,7 @@ namespace GameOfLife.Models
             GenerationNumber++;
             AliveCells = result.AliveCells;
             Generation = result.Generation;
-            IsAlive = result.IsWorldAlive;
+            IsAlive = result.IsGenerationAlive;
         }
     }
 }
