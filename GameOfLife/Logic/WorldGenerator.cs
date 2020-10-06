@@ -97,12 +97,12 @@ namespace GameOfLife.Logic
                         nextGeneration[row, column] = currentCell;
                     }
 
-                    if(currentCell == CellStatus.Alive)
+                    if (currentCell == CellStatus.Alive)
                     {
                         aliveCells++;
                     }
 
-                    if(currentCell!=nextGeneration[row, column])
+                    if (currentCell != nextGeneration[row, column])
                     {
                         isWorldAlive = true;
                     }

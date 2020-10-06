@@ -1,4 +1,3 @@
-using Castle.Core.Internal;
 using GameOfLife.Logic;
 using GameOfLife.Models;
 using System;
@@ -42,6 +41,7 @@ namespace GameOfLife.Tests
         [InlineData(10, 0)]
         [InlineData(-10, 15)]
         [InlineData(15, -20)]
+        [InlineData(-10, -15)]
         public void RandomGeneration_IncorrectInput_ShouldThrowArgumentException(int rows, int columns)
         {
             // Arrange
