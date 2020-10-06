@@ -1,5 +1,7 @@
+using Castle.Core.Internal;
 using GameOfLife.Logic;
 using GameOfLife.Models;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -17,7 +19,7 @@ namespace GameOfLife.Tests
             WorldGenerator worldGenerator = new WorldGenerator(); // create new object of worldGenerator
             WorldSize worldSize = new WorldSize(); // create object of worldSize
             worldSize.Rows = rows; // sets value for rows property in worldSize object
-            worldSize.Columns = columns;
+            worldSize.Columns = columns; // sets value for columns property in worldSize object
 
             // Act
             WorldGenerationResult result = worldGenerator.RandomGeneration(worldSize); // execute method RandomGeneration() in worldGenerator object with worldSize parameter and save it to result
@@ -32,6 +34,21 @@ namespace GameOfLife.Tests
             Assert.Equal(columns, actualColumns);
             Assert.Equal(expectedLifeCells, result.AliveCells);
             Assert.Equal(expectedIsGenerationAlive, result.IsGenerationAlive);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(15, -20)]
+        public void RandomGeneration_IncorrectInput_ShouldThrowArgumentException(int rows, int columns)
+        {
+            // Arrange
+            WorldGenerator worldGenerator = new WorldGenerator();
+            WorldSize worldSize = new WorldSize();
+            worldSize.Rows = rows;
+            worldSize.Columns = columns;
+
+            // Act and Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => worldGenerator.RandomGeneration(worldSize));
         }
     }
 }

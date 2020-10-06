@@ -14,13 +14,13 @@ namespace GameOfLife.Logic
         /// </summary>
         public WorldGenerationResult RandomGeneration(WorldSize worldSize)
         {
-            //if(worldSize size is invalid)
-            //throw new ArgumentException("World Size has incorrect value", nameof(worldSize));
-
+            if(worldSize.Rows < 1 || worldSize.Columns < 1) // worldSize size is invalid
+            {
+                throw new System.ArgumentOutOfRangeException("World Size has incorrect value", nameof(worldSize));
+            }
 
             var firstGeneration = new CellStatus[worldSize.Rows, worldSize.Columns];
             int aliveCells = 0;
-
             // Randomly initialize grid
             for (var row = 0; row < worldSize.Rows; row++)
             {
