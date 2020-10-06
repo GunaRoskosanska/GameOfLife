@@ -38,6 +38,9 @@ namespace GameOfLife.Tests
 
         [Theory]
         [InlineData(0, 0)]
+        [InlineData(0, 10)]
+        [InlineData(10, 0)]
+        [InlineData(-10, 15)]
         [InlineData(15, -20)]
         public void RandomGeneration_IncorrectInput_ShouldThrowArgumentException(int rows, int columns)
         {
