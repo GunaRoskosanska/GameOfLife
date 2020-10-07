@@ -8,7 +8,7 @@ namespace GameOfLife.Models
     /// </summary>
     public class World
     {
-        private readonly WorldGenerator worldGenerator;
+        private readonly IWorldGenerator worldGenerator;
 
         /// <summary>
         /// Gets or sets a uinique world identifier.

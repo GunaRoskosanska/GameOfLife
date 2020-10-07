@@ -1,6 +1,7 @@
 using GameOfLife.Logic;
 using GameOfLife.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -9,6 +10,21 @@ namespace GameOfLife.Tests
 {
     public class WorldGeneratorTest
     {
+        private readonly static CellStatus[,] Beehive = new CellStatus[5, 6]
+        {
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead}
+        };
+
+        public static IEnumerable<object[]> GenerationsTestData =>
+        new List<object[]>
+        {
+            new object[] { Beehive, Beehive, false },
+        };
+
         [Theory]
         [InlineData(10, 10)] // rows and columns to test
         [InlineData(15, 20)]
@@ -52,6 +68,20 @@ namespace GameOfLife.Tests
 
             // Act and Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => worldGenerator.RandomGeneration(worldSize));
+        }
+
+        [Theory]
+        [MemberData(nameof(GenerationsTestData))]
+        public void NextGeneration_BeehiveInput_ReturnBeehive(CellStatus[,] actual, CellStatus[,] expected, bool expectedIsAlive)
+        {
+            var expectedAliveCells = actual.Cast<int>().Sum();
+            WorldGenerator worldGenerator = new WorldGenerator();
+
+            var nextGenerationResult = worldGenerator.NextGeneration(actual);
+
+            Assert.Equal(expected, nextGenerationResult.Generation);
+            Assert.Equal(expectedAliveCells, nextGenerationResult.AliveCells);
+            Assert.Equal(expectedIsAlive, nextGenerationResult.IsGenerationAlive);
         }
     }
 }

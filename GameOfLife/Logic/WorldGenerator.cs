@@ -7,14 +7,14 @@ namespace GameOfLife.Logic
     /// <summary>
     /// Generates statuses of the cells in the grid (world).
     /// </summary>
-    public class WorldGenerator
+    public class WorldGenerator : IWorldGenerator
     {
         /// <summary>
         /// Generates grid of first generation.
         /// </summary>
         public WorldGenerationResult RandomGeneration(WorldSize worldSize)
         {
-            if(worldSize.Rows < 1 || worldSize.Columns < 1) // worldSize size is invalid
+            if (worldSize.Rows < 1 || worldSize.Columns < 1) // worldSize size is invalid
             {
                 throw new System.ArgumentOutOfRangeException("World Size has incorrect value", nameof(worldSize));
             }
