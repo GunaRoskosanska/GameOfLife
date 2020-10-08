@@ -1,8 +1,8 @@
+using GameOfLife.Extensions;
 using GameOfLife.Logic;
 using GameOfLife.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 
@@ -10,38 +10,41 @@ namespace GameOfLife.Tests
 {
     public class WorldGeneratorTest
     {
+        private const CellStatus Dead = CellStatus.Dead;
+        private const CellStatus Alive = CellStatus.Alive;
+
         private readonly static CellStatus[,] WorldThree = new CellStatus[5, 6]
         {
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead}
+            { Dead, Dead,  Dead,  Dead,  Dead,  Dead },
+            { Dead, Dead,  Alive, Alive, Dead,  Dead },
+            { Dead, Alive, Dead,  Dead,  Alive, Dead },
+            { Dead, Dead,  Alive, Alive, Dead,  Dead },
+            { Dead, Dead,  Dead,  Dead,  Dead,  Dead }
         };
 
-        private readonly static CellStatus[,] WorldOneBeginning = new CellStatus[5, 5]
+        private readonly static CellStatus[,] WorldOneFirstGeneration = new CellStatus[5, 5]
         {
-            {CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead,  CellStatus.Alive}
+            { Alive, Dead,  Dead,  Dead,  Dead  },
+            { Dead,  Alive, Dead,  Dead,  Dead  },
+            { Dead,  Dead,  Alive, Dead,  Dead  },
+            { Dead,  Dead,  Dead,  Alive, Dead  },
+            { Dead,  Dead,  Dead,  Dead,  Alive }
         };
 
-        private readonly static CellStatus[,] WorldOneEnd = new CellStatus[5, 5]
-{
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Dead},
-            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead,  CellStatus.Dead}
-};
+        private readonly static CellStatus[,] WorldOneSecondGeneration = new CellStatus[5, 5]
+        {
+            { Dead, Dead,  Dead,  Dead,  Dead },
+            { Dead, Alive, Dead,  Dead,  Dead },
+            { Dead, Dead,  Alive, Dead,  Dead },
+            { Dead, Dead,  Dead,  Alive, Dead },
+            { Dead, Dead,  Dead,  Dead,  Dead }
+        };
 
         public static IEnumerable<object[]> GenerationsTestData =>
         new List<object[]>
         {
             new object[] { WorldThree, WorldThree, false },
-            new object[] { WorldOneBeginning, WorldOneEnd, true },
+            new object[] { WorldOneFirstGeneration, WorldOneSecondGeneration, true },
         };
 
         [Theory]
@@ -51,21 +54,22 @@ namespace GameOfLife.Tests
         {
             // Arrange
             WorldGenerator worldGenerator = new WorldGenerator(); // create new object of worldGenerator
-            WorldSize worldSize = new WorldSize(); // create object of worldSize
-            worldSize.Rows = rows; // sets value for rows property in worldSize object
-            worldSize.Columns = columns; // sets value for columns property in worldSize object
+            WorldSize worldSize = new WorldSize
+            {
+                Rows = rows, // sets value for rows property in worldSize object
+                Columns = columns // sets value for columns property in worldSize object
+            }; // create object of worldSize
 
             // Act
             WorldGenerationResult result = worldGenerator.RandomGeneration(worldSize); // execute method RandomGeneration() in worldGenerator object with worldSize parameter and save it to result
 
             // Assert
-            var actualRows = result.Generation.GetUpperBound(0) + 1;
-            var actualColumns = result.Generation.GetUpperBound(1) + 1;
-            var expectedLifeCells = result.Generation.Cast<int>().Sum();
+            var actualWorldSize = result.Generation.WorldSize();
+            var expectedLifeCells = result.Generation.LifesCount();
             var expectedIsGenerationAlive = expectedLifeCells > 0;
 
-            Assert.Equal(rows, actualRows);
-            Assert.Equal(columns, actualColumns);
+            Assert.Equal(rows, actualWorldSize.Rows);
+            Assert.Equal(columns, actualWorldSize.Columns);
             Assert.Equal(expectedLifeCells, result.AliveCells);
             Assert.Equal(expectedIsGenerationAlive, result.IsGenerationAlive);
         }
@@ -81,9 +85,11 @@ namespace GameOfLife.Tests
         {
             // Arrange
             WorldGenerator worldGenerator = new WorldGenerator();
-            WorldSize worldSize = new WorldSize();
-            worldSize.Rows = rows;
-            worldSize.Columns = columns;
+            WorldSize worldSize = new WorldSize
+            {
+                Rows = rows,
+                Columns = columns
+            };
 
             // Act and Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => worldGenerator.RandomGeneration(worldSize));
@@ -93,7 +99,7 @@ namespace GameOfLife.Tests
         [MemberData(nameof(GenerationsTestData))]
         public void NextGenerationTest(CellStatus[,] actual, CellStatus[,] expected, bool expectedIsAlive)
         {
-            var expectedAliveCells = expected.Cast<int>().Sum();
+            var expectedAliveCells = expected.LifesCount();
             WorldGenerator worldGenerator = new WorldGenerator();
 
             var nextGenerationResult = worldGenerator.NextGeneration(actual);
