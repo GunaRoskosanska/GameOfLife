@@ -2,6 +2,7 @@
 using GameOfLife.View;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 
 namespace GameOfLife.Logic
@@ -183,7 +184,12 @@ namespace GameOfLife.Logic
             }
             else
             {
-                worlds = snapshot.Worlds; 
+                worlds = snapshot.Worlds.Select(memento =>
+                {
+                    var world = new World(new WorldGenerator());
+                    world.RestoreState(memento);
+                    return world;
+                }).ToList(); //Restore worlds from saved mementos
                 displayWorlds = snapshot.DisplayWorlds;
 
                 ContinueGame();
@@ -221,7 +227,7 @@ namespace GameOfLife.Logic
         {
             return new GameSnapshot
             {
-                Worlds = worlds,
+                Worlds = worlds.Select(world => world.SaveState()).ToList(), //Gets world's mementos from each world
                 DisplayWorlds = displayWorlds,
                 TotalAliveWorlds = TotalAliveWorlds,
                 TotalLifes = TotalLifes,
@@ -256,11 +262,12 @@ namespace GameOfLife.Logic
         /// <returns></returns>
         private List<World> CreateWorlds(int worldsCount, WorldSize worldSize)
         {
+            var worldGenerator = new WorldGenerator();
             var newWorlds = new List<World>();
 
             for (int i = 1; i <= worldsCount; i++)
             {
-                var world = new World(i, worldSize);
+                var world = new World(worldSize, worldGenerator);
 
                 newWorlds.Add(world);
             }
@@ -273,8 +280,8 @@ namespace GameOfLife.Logic
         /// </summary>
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            NextGeneration();
             gamePresenter.Print(Snapshot());
+            NextGeneration();
         }
     }
 }

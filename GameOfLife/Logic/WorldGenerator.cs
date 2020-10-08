@@ -1,4 +1,5 @@
-﻿using GameOfLife.Models;
+﻿using GameOfLife.Extensions;
+using GameOfLife.Models;
 using System;
 using System.Security.Cryptography;
 
@@ -16,7 +17,7 @@ namespace GameOfLife.Logic
         {
             if (worldSize.Rows < 1 || worldSize.Columns < 1) // worldSize size is invalid
             {
-                throw new System.ArgumentOutOfRangeException("World Size has incorrect value", nameof(worldSize));
+                throw new ArgumentOutOfRangeException("World Size has incorrect value", nameof(worldSize));
             }
 
             var firstGeneration = new CellStatus[worldSize.Rows, worldSize.Columns];
@@ -53,11 +54,7 @@ namespace GameOfLife.Logic
         {
             var isWorldAlive = false;
             int aliveCells = 0;
-            var worldSize = new WorldSize
-            {
-                Rows = currentGeneration.GetUpperBound(0) + 1,
-                Columns = currentGeneration.GetUpperBound(1) + 1,
-            };
+            var worldSize = currentGeneration.WorldSize();
             var nextGeneration = new CellStatus[worldSize.Rows, worldSize.Columns];
 
             // Loop through every cell
@@ -126,11 +123,7 @@ namespace GameOfLife.Logic
         /// <returns>Number of live neighbours</returns>
         private int CalculateLiveNeighbours(int x, int y, CellStatus[,] currentGeneration)
         {
-            var size = new WorldSize
-            {
-                Rows = currentGeneration.GetUpperBound(0) + 1,
-                Columns = currentGeneration.GetUpperBound(1) + 1,
-            };
+            var worldSize = currentGeneration.WorldSize();
 
             // Calculate live neighours
             int liveNeighbours = 0;
@@ -138,9 +131,9 @@ namespace GameOfLife.Logic
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    if (x + i < 0 || x + i >= size.Rows)   // Out of bounds
+                    if (x + i < 0 || x + i >= worldSize.Rows)   // Out of bounds
                         continue;
-                    if (y + j < 0 || y + j >= size.Columns)   // Out of bounds
+                    if (y + j < 0 || y + j >= worldSize.Columns)   // Out of bounds
                         continue;
                     if (x + i == x && y + j == y)       // Same Cell
                         continue;

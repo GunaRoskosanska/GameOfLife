@@ -1,4 +1,6 @@
-﻿using GameOfLife.Models;
+﻿using GameOfLife.Extensions;
+using GameOfLife.Logic;
+using GameOfLife.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -155,22 +157,23 @@ namespace GameOfLife.View
         {
             Console.Clear();
 
-            var displayWorlds = snapshot.DisplayWorlds.Select(x => snapshot.Worlds[x - 1]).ToArray();
-
             var left = 0;
             var top = 0;
-            int worldsInRow = 0;
+            int count = 0;
+            int maxCount = Console.BufferWidth / Shift;
 
-            foreach (var world in displayWorlds)
+            foreach(var number in snapshot.DisplayWorlds)
             {
-                Print(world, new Point(left, top));
+                var world = snapshot.Worlds[number - 1];
+                Print(number, world, new Point(left, top));
                 left += Shift;
-                worldsInRow++;
+                count++;
 
-                if(worldsInRow % 5 == 0)
+                if (count == maxCount)
                 {
                     left = 0;
                     top += Shift;
+                    count = 0;
                 }
             }
 
@@ -184,20 +187,22 @@ namespace GameOfLife.View
         /// </summary>
         /// <param name="world">Information about the worlds.</param>
         /// <param name="position">Position.</param>
-        private void Print(World world, Point position)
+        private void Print(int number, WorldMemento world, Point position)
         {
             var left = position.X;
             var top = position.Y;
-            
+            var worldSize = world.Generation.WorldSize();
+
+
             Console.SetCursorPosition(left, top);
             var deadOrAlive = world.IsAlive ? "Alive" : "Dead";
-            Print($"ID:{world.Id} G:{world.GenerationNumber} L:{world.AliveCells} {deadOrAlive}");
+            Print($"ID:{number} G:{world.GenerationNumber} L:{world.AliveCells} {deadOrAlive}");
             top++;
 
-            for (int i = 0; i < world.Size.Rows; i++)
+            for (int i = 0; i < worldSize.Rows; i++)
             {
                 var stringBuilder = new StringBuilder();
-                for (int j = 0; j < world.Size.Columns; j++)
+                for (int j = 0; j < worldSize.Columns; j++)
                 {
                     if (world.Generation[i, j] == CellStatus.Alive)
                     {

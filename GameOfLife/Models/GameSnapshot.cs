@@ -30,6 +30,6 @@ namespace GameOfLife.Models
         /// <summary>
         /// Gets or sets all worlds.
         /// </summary>
-        public List<World> Worlds { get; set; }
+        public List<WorldMemento> Worlds { get; set; }
     }
 }
