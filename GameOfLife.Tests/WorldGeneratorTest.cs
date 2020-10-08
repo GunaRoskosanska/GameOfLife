@@ -10,7 +10,7 @@ namespace GameOfLife.Tests
 {
     public class WorldGeneratorTest
     {
-        private readonly static CellStatus[,] Beehive = new CellStatus[5, 6]
+        private readonly static CellStatus[,] WorldThree = new CellStatus[5, 6]
         {
             {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
             {CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
@@ -19,10 +19,29 @@ namespace GameOfLife.Tests
             {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead}
         };
 
+        private readonly static CellStatus[,] WorldOneBeginning = new CellStatus[5, 5]
+        {
+            {CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead,  CellStatus.Alive}
+        };
+
+        private readonly static CellStatus[,] WorldOneEnd = new CellStatus[5, 5]
+{
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead,  CellStatus.Alive, CellStatus.Dead, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Alive, CellStatus.Dead},
+            {CellStatus.Dead, CellStatus.Dead, CellStatus.Dead, CellStatus.Dead,  CellStatus.Dead}
+};
+
         public static IEnumerable<object[]> GenerationsTestData =>
         new List<object[]>
         {
-            new object[] { Beehive, Beehive, false },
+            new object[] { WorldThree, WorldThree, false },
+            new object[] { WorldOneBeginning, WorldOneEnd, true },
         };
 
         [Theory]
@@ -72,9 +91,9 @@ namespace GameOfLife.Tests
 
         [Theory]
         [MemberData(nameof(GenerationsTestData))]
-        public void NextGeneration_BeehiveInput_ReturnBeehive(CellStatus[,] actual, CellStatus[,] expected, bool expectedIsAlive)
+        public void NextGenerationTest(CellStatus[,] actual, CellStatus[,] expected, bool expectedIsAlive)
         {
-            var expectedAliveCells = actual.Cast<int>().Sum();
+            var expectedAliveCells = expected.Cast<int>().Sum();
             WorldGenerator worldGenerator = new WorldGenerator();
 
             var nextGenerationResult = worldGenerator.NextGeneration(actual);
