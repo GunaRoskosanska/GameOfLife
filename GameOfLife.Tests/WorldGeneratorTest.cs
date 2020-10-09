@@ -13,15 +13,6 @@ namespace GameOfLife.Tests
         private const CellStatus Dead = CellStatus.Dead;
         private const CellStatus Alive = CellStatus.Alive;
 
-        private readonly static CellStatus[,] WorldThree = new CellStatus[5, 6]
-        {
-            { Dead, Dead,  Dead,  Dead,  Dead,  Dead },
-            { Dead, Dead,  Alive, Alive, Dead,  Dead },
-            { Dead, Alive, Dead,  Dead,  Alive, Dead },
-            { Dead, Dead,  Alive, Alive, Dead,  Dead },
-            { Dead, Dead,  Dead,  Dead,  Dead,  Dead }
-        };
-
         private readonly static CellStatus[,] WorldOneFirstGeneration = new CellStatus[5, 5]
         {
             { Alive, Dead,  Dead,  Dead,  Dead  },
@@ -40,11 +31,48 @@ namespace GameOfLife.Tests
             { Dead, Dead,  Dead,  Dead,  Dead }
         };
 
+        private readonly static CellStatus[,] WorldTwoFirstGeneration = new CellStatus[5, 5]
+        {
+            { Dead, Dead,  Dead,  Dead,  Dead },
+            { Dead, Dead,  Dead,  Dead,  Dead },
+            { Dead, Alive, Alive, Alive, Dead },
+            { Dead, Dead,  Dead,  Dead,  Dead },
+            { Dead, Dead,  Dead,  Dead,  Dead }
+        };
+
+        private readonly static CellStatus[,] WorldTwoSecondGeneration = new CellStatus[5, 5]
+        {
+            { Dead, Dead, Dead,  Dead,  Dead },
+            { Dead, Dead, Alive, Dead,  Dead },
+            { Dead, Dead, Alive, Dead,  Dead },
+            { Dead, Dead, Alive, Dead,  Dead },
+            { Dead, Dead, Dead,  Dead,  Dead }
+        };
+
+        private readonly static CellStatus[,] WorldThree = new CellStatus[5, 6]
+        {
+            { Dead, Dead,  Dead,  Dead,  Dead,  Dead },
+            { Dead, Dead,  Alive, Alive, Dead,  Dead },
+            { Dead, Alive, Dead,  Dead,  Alive, Dead },
+            { Dead, Dead,  Alive, Alive, Dead,  Dead },
+            { Dead, Dead,  Dead,  Dead,  Dead,  Dead }
+        };
+
+        private readonly static CellStatus[,] WorldFour = new CellStatus[4, 4]
+        {
+            { Dead, Dead,  Dead,  Dead },
+            { Dead, Alive, Alive, Dead },
+            { Dead, Alive, Alive, Dead },
+            { Dead, Dead,  Dead,  Dead }
+        };
+
         public static IEnumerable<object[]> GenerationsTestData =>
         new List<object[]>
         {
-            new object[] { WorldThree, WorldThree, false },
             new object[] { WorldOneFirstGeneration, WorldOneSecondGeneration, true },
+            new object[] { WorldTwoFirstGeneration, WorldTwoSecondGeneration, true },
+            new object[] { WorldThree, WorldThree, false },
+            new object[] { WorldFour, WorldFour, false },
         };
 
         [Theory]
